@@ -29,12 +29,12 @@ async def get_user_by_name(ctx, name: str):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int):
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).stream()
+    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).get()
     # Increment gold count by amount
     for user in user_ref:
-        user_ref = db.collection('users').document(user.id)
-        user_ref.update({'gold': firestore.Increment(amount)})
-
+        ref = user.reference
+        ref.update({'gold': firestore.Increment(amount)})
+        
     await ctx.respond(f'Done')
 
 
