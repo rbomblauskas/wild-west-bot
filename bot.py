@@ -3,6 +3,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
+import datetime
 
 # Use a service account.
 cred = credentials.Certificate('mif-renginys-firebase-adminsdk-ld2k1-dbbfebe5f1.json')
@@ -38,6 +39,26 @@ async def add_gold(ctx, name: str, amount: int):
     user_doc_ref = user_ref[0].reference
     user_doc_ref.update({'gold': firestore.Increment(amount)})
     await ctx.respond(f'Added {amount} gold to {name}\'s account')
+
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def register_user(ctx, name: str, dc_username: str):
+    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
+    if user_ref:
+        await ctx.respond(f'User {dc_username} already exists')
+        return
+    
+    doc_ref = db.collection("users").document()
+    timestamp = datetime.datetime.now()
+    data = {
+        "dc_username": dc_username,
+        "gold": 0,
+        "name": name,
+        "registration_date": timestamp
+    }
+    doc_ref.set(data)
+
+    await ctx.respond(f'User {dc_username} sucessfully created')
+
 
 
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
