@@ -40,3 +40,9 @@ def register_user(name: str, dc_username: str):
     }
     doc_ref.set(data)
     return True
+
+def is_authorized(dc_username: str):
+    user_ref = db.collection('admins').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
+    if user_ref:
+        return True
+    return False
