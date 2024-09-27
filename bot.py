@@ -62,7 +62,39 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
     gold_embed.add_field(name="User", value=user_data['dc_username'], inline=True)
     gold_embed.add_field(name="Amount", value=amount, inline=True)
     gold_embed.add_field(name="Reason", value=reason, inline=True)
-    gold_embed.add_field(name="New total gold", value=user_data['gold'], inline=True)
+    gold_embed.add_field(name="New total gold", value=msg, inline=True)
+    await ctx.respond(embed=gold_embed)
+
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def remove_gold(ctx, name: str, amount: int, reason: str):
+    if not database.is_authorized(ctx.author.name):        
+        error_embed = discord.Embed(
+            title="Error",
+            description=f"User is not authorized",
+            color=discord.Colour.red(),
+        )
+        await ctx.respond(embed=error_embed)
+        return
+    success, msg = database.remove_gold(ctx.author.name, name, amount, reason)
+    if not success:
+        error_embed = discord.Embed(
+            title="Error",
+            description=msg,
+            color=discord.Colour.red(),
+        )
+        await ctx.respond(embed=error_embed)
+        return
+    user_data = database.get_user_by_name(name)
+    if not user_data:
+        return
+    gold_embed = discord.Embed(
+            title="Gold removed successfully",
+            color=discord.Colour.green(),
+    )
+    gold_embed.add_field(name="User", value=user_data['dc_username'], inline=True)
+    gold_embed.add_field(name="Amount", value=amount, inline=True)
+    gold_embed.add_field(name="Reason", value=reason, inline=True)
+    gold_embed.add_field(name="New total gold", value=msg, inline=True)
     await ctx.respond(embed=gold_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])

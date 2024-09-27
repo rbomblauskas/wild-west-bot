@@ -19,10 +19,14 @@ def get_user_by_name(name: str):
     return user_data
 
 def add_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool, str]:
+    if amount <= 0:
+        return (False, 'Not a valid amount')
     user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', receiver)).limit(1).get()
     if not user_ref:
         return (False, 'No such user')
+    user_data = user_ref[0].to_dict()
     user_doc_ref = user_ref[0].reference
+    new_balance = user_data['gold'] + amount
     user_doc_ref.update({'gold': firestore.Increment(amount)})
     doc_ref = db.collection("transactions").document()
     data = {
@@ -33,27 +37,30 @@ def add_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool
         "timestamp": datetime.datetime.now()
     }
     doc_ref.set(data)
-    return (True, '')
+    return (True, new_balance)
 
-def remove_gold(name: str, amount: int, reason: str) -> Tuple[bool, str]:
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).get()
+def remove_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool, str]:
+    if amount <= 0:
+        return (False, 'Not a valid amount')
+    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', receiver)).limit(1).get()
     if not user_ref:
         return (False, 'No such user')
     user_data = user_ref[0].to_dict()
     user_doc_ref = user_ref[0].reference
-    new_balance = user_data.gold - amount
+    new_balance = user_data['gold'] - amount
     if new_balance < 0:
         return(False, 'Insufficient funds')
-    user_doc_ref.update({'gold': new_balance})
+    user_doc_ref.update({'gold': firestore.Increment(-amount)})
     doc_ref = db.collection("transactions").document()
     data = {
-        "dc_username": name,
+        "sender": sender,
+        "receiver": receiver,
         "amount": -amount,
         "reason": reason,
         "timestamp": datetime.datetime.now()
     }
     doc_ref.set(data)
-    return (True, '')
+    return (True, new_balance)
 
 def register_user(name: str, dc_username: str) -> Tuple[bool, str]:
     user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
