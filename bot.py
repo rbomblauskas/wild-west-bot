@@ -14,10 +14,24 @@ async def hello(ctx):
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def get_user_by_name(ctx, name: str):
     user_data = database.get_user_by_name(name)
-    if not user_data:
-        await ctx.respond('No such user')
+    if not user_data:  
+        error_embed = discord.Embed(
+            title="Error",
+            description=f"No such user {name}",
+            color=discord.Colour.red(),
+        )
+        await ctx.respond(embed=error_embed)
         return
-    await ctx.respond(f'{user_data}')
+    
+    user_embed = discord.Embed(
+            title="User data",
+            color=discord.Colour.blue(),
+    )
+    user_embed.add_field(name="Name", value=user_data['name'], inline=True)
+    user_embed.add_field(name="Discord username", value=user_data['dc_username'], inline=True)
+    user_embed.add_field(name="Gold", value=user_data['gold'], inline=True)
+    user_embed.add_field(name="Registration date", value=user_data['registration_date'].strftime('%Y-%m-%d %H:%M:%S'), inline=True)
+    await ctx.respond(embed=user_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int, reason: str):
