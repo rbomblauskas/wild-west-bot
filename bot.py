@@ -1,14 +1,5 @@
 import discord
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-from google.cloud.firestore_v1.base_query import FieldFilter
-import datetime
-
-# Use a service account.
-cred = credentials.Certificate('mif-renginys-firebase-adminsdk-ld2k1-dbbfebe5f1.json')
-app = firebase_admin.initialize_app(cred)
-db = firestore.client() # Maybe we will need to use async client
+import database
 
 bot = discord.Bot()
 
@@ -22,41 +13,24 @@ async def hello(ctx):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def get_user_by_name(ctx, name: str):
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).get()
-    if not user_ref:
+    user_data = database.get_user_by_name(name)
+    if not user_data:
         await ctx.respond('No such user')
         return
-    user_doc = user_ref[0]
-    user_data = user_doc.to_dict()
     await ctx.respond(f'{user_data}')
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int):
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).get()
-    if not user_ref:
+    if not database.add_gold(name, amount):
         await ctx.respond('No such user')
         return
-    user_doc_ref = user_ref[0].reference
-    user_doc_ref.update({'gold': firestore.Increment(amount)})
     await ctx.respond(f'Added {amount} gold to {name}\'s account')
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def register_user(ctx, name: str, dc_username: str):
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
-    if user_ref:
-        await ctx.respond(f'User {dc_username} already exists')
+    if not database.register_user(name, dc_username):
+        await ctx.respond('No such user')
         return
-    
-    doc_ref = db.collection("users").document()
-    timestamp = datetime.datetime.now()
-    data = {
-        "dc_username": dc_username,
-        "gold": 0,
-        "name": name,
-        "registration_date": timestamp
-    }
-    doc_ref.set(data)
-
     await ctx.respond(f'User {dc_username} sucessfully created')
 
 
