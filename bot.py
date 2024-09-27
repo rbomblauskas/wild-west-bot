@@ -21,21 +21,23 @@ async def hello(ctx):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def get_user_by_name(ctx, name: str):
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).stream()
-    user_data = None
-    for user in user_ref:
-        user_data = user.to_dict()
+    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).get()
+    if not user_ref:
+        await ctx.respond('No such user')
+        return
+    user_doc = user_ref[0]
+    user_data = user_doc.to_dict()
     await ctx.respond(f'{user_data}')
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int):
     user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', name)).limit(1).get()
-    # Increment gold count by amount
-    for user in user_ref:
-        ref = user.reference
-        ref.update({'gold': firestore.Increment(amount)})
-        
-    await ctx.respond(f'Done')
+    if not user_ref:
+        await ctx.respond('No such user')
+        return
+    user_doc_ref = user_ref[0].reference
+    user_doc_ref.update({'gold': firestore.Increment(amount)})
+    await ctx.respond(f'Added {amount} gold to {name}\'s account')
 
 
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
