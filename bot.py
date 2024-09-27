@@ -52,14 +52,11 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
         )
         await ctx.respond(embed=error_embed)
         return
-    user_data = database.get_user_by_name(name)
-    if not user_data:
-        return
     gold_embed = discord.Embed(
             title="Gold added successfully",
             color=discord.Colour.green(),
     )
-    gold_embed.add_field(name="User", value=user_data['dc_username'], inline=True)
+    gold_embed.add_field(name="User", value=name, inline=True)
     gold_embed.add_field(name="Amount", value=amount, inline=True)
     gold_embed.add_field(name="Reason", value=reason, inline=True)
     gold_embed.add_field(name="New total gold", value=msg, inline=True)
@@ -84,14 +81,11 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
         )
         await ctx.respond(embed=error_embed)
         return
-    user_data = database.get_user_by_name(name)
-    if not user_data:
-        return
     gold_embed = discord.Embed(
             title="Gold removed successfully",
             color=discord.Colour.green(),
     )
-    gold_embed.add_field(name="User", value=user_data['dc_username'], inline=True)
+    gold_embed.add_field(name="User", value=name, inline=True)
     gold_embed.add_field(name="Amount", value=amount, inline=True)
     gold_embed.add_field(name="Reason", value=reason, inline=True)
     gold_embed.add_field(name="New total gold", value=msg, inline=True)
