@@ -20,12 +20,13 @@ async def get_user_by_name(ctx, name: str):
     await ctx.respond(f'{user_data}')
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-async def add_gold(ctx, name: str, amount: int):
+async def add_gold(ctx, name: str, amount: int, reason: str):
     if not database.is_authorized(ctx.author.name):
         await ctx.respond('User is not authorized')
         return
-    if not database.add_gold(name, amount):
-        await ctx.respond('No such user')
+    success, msg = database.add_gold(ctx.author.name, name, amount, reason)
+    if not success:
+        await ctx.respond(msg)
         return
     await ctx.respond(f'Added {amount} gold to {name}\'s account')
 
@@ -34,8 +35,9 @@ async def register_user(ctx, name: str, dc_username: str):
     if not database.is_authorized(ctx.author.name):
         await ctx.respond('User is not authorized')
         return
-    if not database.register_user(name, dc_username):
-        await ctx.respond('No such user')
+    success, msg = database.register_user(name, dc_username)
+    if not success:
+        await ctx.respond(msg)
         return
     await ctx.respond(f'User {dc_username} sucessfully created')
 
