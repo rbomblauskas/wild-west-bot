@@ -35,14 +35,35 @@ async def get_user_by_name(ctx, name: str):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int, reason: str):
-    if not database.is_authorized(ctx.author.name):
-        await ctx.respond('User is not authorized')
+    if not database.is_authorized(ctx.author.name):        
+        error_embed = discord.Embed(
+            title="Error",
+            description=f"User is not authorized",
+            color=discord.Colour.red(),
+        )
+        await ctx.respond(embed=error_embed)
         return
     success, msg = database.add_gold(ctx.author.name, name, amount, reason)
     if not success:
-        await ctx.respond(msg)
+        error_embed = discord.Embed(
+            title="Error",
+            description=msg,
+            color=discord.Colour.red(),
+        )
+        await ctx.respond(embed=error_embed)
         return
-    await ctx.respond(f'Added {amount} gold to {name}\'s account')
+    user_data = database.get_user_by_name(name)
+    if not user_data:
+        return
+    gold_embed = discord.Embed(
+            title="Gold added successfully",
+            color=discord.Colour.green(),
+    )
+    gold_embed.add_field(name="User", value=user_data['dc_username'], inline=True)
+    gold_embed.add_field(name="Amount", value=amount, inline=True)
+    gold_embed.add_field(name="Reason", value=reason, inline=True)
+    gold_embed.add_field(name="New total gold", value=user_data['gold'], inline=True)
+    await ctx.respond(embed=gold_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def register_user(ctx, name: str, dc_username: str):
