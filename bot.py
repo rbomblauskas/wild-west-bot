@@ -92,15 +92,28 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
     await ctx.respond(embed=gold_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-async def register_user(ctx, name: str, dc_username: str):
-    if not database.is_authorized(ctx.author.name):
-        await ctx.respond('User is not authorized')
+async def register_user(ctx, name: str, dc_username: str = None):
+    invoking_user_dc_username = ctx.author.name
+    
+    if not name:
+        await ctx.respond('Name must be provided.', ephemeral=True)
         return
+    
+    if database.is_authorized(invoking_user_dc_username):
+        if not dc_username:
+            await ctx.respond('As an admin, you must provide a Discord username to register.', ephemeral=True)
+            return
+    else:
+        dc_username = invoking_user_dc_username
+        if database.is_user_registered(dc_username):
+            await ctx.respond(f'The Discord username **{dc_username}** is already registered. Each account can only register once.', ephemeral=True)
+            return
     success, msg = database.register_user(name, dc_username)
     if not success:
-        await ctx.respond(msg)
+        await ctx.respond(msg, ephemeral=True) 
         return
-    await ctx.respond(f'User {dc_username} sucessfully created')
+
+    await ctx.respond(f'User **{dc_username}** successfully created!', ephemeral=True)
 
 
 

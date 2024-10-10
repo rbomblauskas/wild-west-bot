@@ -93,11 +93,13 @@ def remove_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[b
     except Exception as e:
         return (False, str(e))
 
-def register_user(name: str, dc_username: str) -> Tuple[bool, str]:
-    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
-    if user_ref:
-        return (False, 'User already exists')
+def is_user_registered(dc_username: str) -> bool:
     
+    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
+    return len(user_ref) > 0
+
+def register_user(name: str, dc_username: str) -> Tuple[bool, str]:
+
     doc_ref = db.collection("users").document()
     timestamp = datetime.datetime.now()
     data = {
@@ -107,6 +109,7 @@ def register_user(name: str, dc_username: str) -> Tuple[bool, str]:
         "registration_date": timestamp
     }
     doc_ref.set(data)
+    
     return (True, '')
 
 def is_authorized(dc_username: str) -> bool:
