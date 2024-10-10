@@ -9,7 +9,7 @@ async def on_ready():
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def hello(ctx):
-    await ctx.respond('hi')
+    await ctx.respond('hi', ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def get_user_by_name(ctx, name: str):
@@ -20,7 +20,7 @@ async def get_user_by_name(ctx, name: str):
             description=f"No such user {name}",
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed)
+        await ctx.respond(embed=error_embed, ephemeral=True)
         return
     
     user_embed = discord.Embed(
@@ -31,7 +31,7 @@ async def get_user_by_name(ctx, name: str):
     user_embed.add_field(name="Discord username", value=user_data['dc_username'], inline=True)
     user_embed.add_field(name="Gold", value=user_data['gold'], inline=True)
     user_embed.add_field(name="Registration date", value=user_data['registration_date'].strftime('%Y-%m-%d %H:%M:%S'), inline=True)
-    await ctx.respond(embed=user_embed)
+    await ctx.respond(embed=user_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int, reason: str):
@@ -41,7 +41,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
             description=f"User is not authorized",
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed)
+        await ctx.respond(embed=error_embed, ephemeral=True)
         return
     success, msg = database.add_gold(ctx.author.name, name, amount, reason)
     if not success:
@@ -50,7 +50,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
             description=msg,
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed)
+        await ctx.respond(embed=error_embed, ephemeral=True)
         return
     gold_embed = discord.Embed(
             title="Gold added successfully",
@@ -60,7 +60,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
     gold_embed.add_field(name="Amount", value=amount, inline=True)
     gold_embed.add_field(name="Reason", value=reason, inline=True)
     gold_embed.add_field(name="New total gold", value=msg, inline=True)
-    await ctx.respond(embed=gold_embed)
+    await ctx.respond(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def remove_gold(ctx, name: str, amount: int, reason: str):
@@ -70,7 +70,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
             description=f"User is not authorized",
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed)
+        await ctx.respond(embed=error_embed, ephemeral=True)
         return
     success, msg = database.remove_gold(ctx.author.name, name, amount, reason)
     if not success:
@@ -79,7 +79,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
             description=msg,
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed)
+        await ctx.respond(embed=error_embed, ephemeral=True)
         return
     gold_embed = discord.Embed(
             title="Gold removed successfully",
@@ -89,7 +89,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
     gold_embed.add_field(name="Amount", value=amount, inline=True)
     gold_embed.add_field(name="Reason", value=reason, inline=True)
     gold_embed.add_field(name="New total gold", value=msg, inline=True)
-    await ctx.respond(embed=gold_embed)
+    await ctx.respond(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def register_user(ctx, name: str, dc_username: str = None):
