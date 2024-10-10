@@ -191,7 +191,29 @@ async def list_users(ctx):
 
     await message.edit(view=view)
 
+@bot.slash_command(guild_ids=[1288951632200990881])    
+async def help(ctx):
+    invoking_user_dc_username = ctx.author.name
 
+    help_embed = discord.Embed(
+        title="Available Commands",
+        description="Here are the commands you can use:",
+        color=discord.Colour.blue(),
+    )
+
+    # NON-ADMIN
+    help_embed.add_field(name="/hello", value="Says hi.", inline=False)
+    help_embed.add_field(name="/get_user_by_name", value="Gets user details by name. Usage: `/get_user_by_name <name>`", inline=False)
+    help_embed.add_field(name="/register_user", value="Registers a new user. Usage: `/register_user <name>`", inline=False)
+
+    
+    if database.is_authorized(invoking_user_dc_username):
+        # ADMIN
+        help_embed.add_field(name="/add_gold", value="Adds gold to a user. Usage: `/add_gold <name> <amount> <reason>`", inline=False)
+        help_embed.add_field(name="/remove_gold", value="Removes gold from a user. Usage: `/remove_gold <name> <amount> <reason>`", inline=False)
+        help_embed.add_field(name="/list_users", value="Lists all registered users.", inline=False)
+
+    await ctx.respond(embed=help_embed, ephemeral=True)
 
 
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
