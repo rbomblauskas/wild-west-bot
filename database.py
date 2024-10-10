@@ -117,3 +117,7 @@ def is_authorized(dc_username: str) -> bool:
     if user_ref:
         return True
     return False
+
+def get_all_users():
+    users_ref = db.collection('users').stream()
+    return [user_doc.to_dict() for user_doc in users_ref]
