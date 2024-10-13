@@ -98,13 +98,14 @@ def is_user_registered(dc_username: str) -> bool:
     user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
     return len(user_ref) > 0
 
-def register_user(name: str, dc_username: str) -> Tuple[bool, str]:
+def register_user(name: str, dc_username: str, language: str) -> Tuple[bool, str]:
 
     doc_ref = db.collection("users").document()
     timestamp = datetime.datetime.now()
     data = {
         "dc_username": dc_username,
         "gold": 0,
+        "language": language,
         "name": name,
         "registration_date": timestamp
     }
@@ -121,3 +122,14 @@ def is_authorized(dc_username: str) -> bool:
 def get_all_users():
     users_ref = db.collection('users').stream()
     return [user_doc.to_dict() for user_doc in users_ref]
+
+def get_user_language(dc_username: str) -> str:
+    user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
+    
+    if not user_ref:
+        return 'en'  
+    
+    user_doc = user_ref[0]
+    user_data = user_doc.to_dict()
+    language = user_data.get('language', 'en') 
+    return language
