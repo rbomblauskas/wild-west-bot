@@ -202,6 +202,15 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
     
+    if language not in ['lt', 'en']:
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'invalid_language'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+    
     if database.is_user_registered(dc_username):
         embed = discord.Embed(
             title=translate(user_language, 'error'),
