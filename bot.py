@@ -92,6 +92,9 @@ async def hello(ctx):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def get_user_by_name(ctx, name: str):
+    
+    await ctx.defer(ephemeral=True)
+    
     user_language = database.get_user_language(ctx.author.name)
     user_data = database.get_user_by_name(name)
     
@@ -101,7 +104,7 @@ async def get_user_by_name(ctx, name: str):
             description=translate(user_language, 'no_such_user', name=name),
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     
     user_embed = discord.Embed(
@@ -112,10 +115,13 @@ async def get_user_by_name(ctx, name: str):
     user_embed.add_field(name=translate(user_language, 'discord_username'), value=user_data['dc_username'], inline=True)
     user_embed.add_field(name=translate(user_language, 'gold'), value=user_data['gold'], inline=True)
     user_embed.add_field(name=translate(user_language, 'registration_date'), value=user_data['registration_date'].strftime('%Y-%m-%d %H:%M:%S'), inline=True)
-    await ctx.respond(embed=user_embed, ephemeral=True)
+    await ctx.followup.send(embed=user_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def add_gold(ctx, name: str, amount: int, reason: str):
+    
+    await ctx.defer(ephemeral=True)
+    
     user_language = database.get_user_language(ctx.author.name)
     
     if not database.is_authorized(ctx.author.name):        
@@ -124,7 +130,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
             description=translate(user_language, "user_is_not_authorized"),
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     success, msg = database.add_gold(ctx.author.name, name, amount, reason)
     if not success:
@@ -133,7 +139,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
             description=msg,
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     gold_embed = discord.Embed(
             title=translate(user_language, "gold_added_successfully"),
@@ -143,10 +149,13 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
     gold_embed.add_field(name=translate(user_language, 'amount'), value=amount, inline=True)
     gold_embed.add_field(name=translate(user_language, 'reason'), value=reason, inline=True)
     gold_embed.add_field(name=translate(user_language, "new_total_gold"), value=msg, inline=True)
-    await ctx.respond(embed=gold_embed, ephemeral=True)
+    await ctx.followup.send(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def remove_gold(ctx, name: str, amount: int, reason: str):
+    
+    await ctx.defer(ephemeral=True)
+    
     user_language = database.get_user_language(ctx.author.name)
     
     if not database.is_authorized(ctx.author.name):        
@@ -155,7 +164,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
             description=translate(user_language, "user_is_not_authorized"),
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     success, msg = database.remove_gold(ctx.author.name, name, amount, reason)
     if not success:
@@ -164,7 +173,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
             description=msg,
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     gold_embed = discord.Embed(
             title=translate(user_language, 'gold_removed_successfully'),
@@ -174,10 +183,13 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
     gold_embed.add_field(name=translate(user_language, 'amount'), value=amount, inline=True)
     gold_embed.add_field(name=translate(user_language, 'reason'), value=reason, inline=True)
     gold_embed.add_field(name=translate(user_language, 'new_total_gold'), value=msg, inline=True)
-    await ctx.respond(embed=gold_embed, ephemeral=True)
+    await ctx.followup.send(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def register_user(ctx, name: str, dc_username: str, language: str):
+    
+    await ctx.defer(ephemeral=True)
+    
     user_language = database.get_user_language(ctx.author.name)
     invoking_user_dc_username = ctx.author.name
     
@@ -187,7 +199,7 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
             description=translate(user_language, 'user_is_not_authorized'),
             color=discord.Color.red() 
         )
-        await ctx.respond(embed=embed, ephemeral=True)
+        await ctx.followup.send(embed=embed, ephemeral=True)
         return
     
     if database.is_user_registered(dc_username):
@@ -196,22 +208,25 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
             description=translate(user_language, 'user_is_already_registered', dc_username=dc_username),
             color=discord.Color.red()
         )
-        await ctx.respond(embed=embed, ephemeral=True)
+        await ctx.followup.send(embed=embed, ephemeral=True)
         return
     
     success, msg = database.register_user(name, dc_username, language)
     if not success:
-        await ctx.respond(msg, ephemeral=True) 
+        await ctx.followup.send(msg, ephemeral=True) 
         return
     embed = discord.Embed(
         title=translate(user_language, 'registration'), 
         description=translate(user_language, 'registration_success', name=name, dc_username=dc_username),
         color=discord.Color.green()
     )
-    await ctx.respond(embed=embed, ephemeral=True)
+    await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def list_users(ctx):
+    
+    await ctx.defer(ephemeral=True)
+    
     user_language = database.get_user_language(ctx.author.name)
     
     if not database.is_authorized(ctx.author.name):        
@@ -220,7 +235,7 @@ async def list_users(ctx):
             description=translate(user_language, "user_is_not_authorized"),
             color=discord.Colour.red(),
         )
-        await ctx.respond(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     
     users = database.get_all_users()
@@ -228,7 +243,7 @@ async def list_users(ctx):
     total_users = len(users)
 
     if total_users == 0:
-        await ctx.respond(translate(user_language, 'no_registered_users'), ephemeral=True)
+        await ctx.followup.send(translate(user_language, 'no_registered_users'), ephemeral=True)
         return
 
     num_pages = (total_users + pages - 1) // pages
@@ -251,7 +266,7 @@ async def list_users(ctx):
         
         return embed
 
-    message = await ctx.respond(embed=create_embed(cur_page), ephemeral=True)
+    message = await ctx.followup.send(embed=create_embed(cur_page), ephemeral=True)
 
     previous_button = discord.ui.Button(label=translate(user_language, 'previous_button'), style=discord.ButtonStyle.primary, disabled=True)
     next_button = discord.ui.Button(label=translate(user_language, 'next_button'), style=discord.ButtonStyle.primary)
@@ -292,6 +307,9 @@ async def list_users(ctx):
 
 @bot.slash_command(guild_ids=[1288951632200990881])    
 async def help(ctx):
+    
+    await ctx.defer(ephemeral=True)
+    
     user_language = database.get_user_language(ctx.author.name)
     invoking_user_dc_username = ctx.author.name
 
@@ -312,7 +330,7 @@ async def help(ctx):
         help_embed.add_field(name="/list_users", value=translate(user_language, 'list_users_description'), inline=False)
         help_embed.add_field(name="/register_user", value=translate(user_language, 'register_user_description'), inline=False)
 
-    await ctx.respond(embed=help_embed, ephemeral=True)
+    await ctx.followup.send(embed=help_embed, ephemeral=True)
 
 
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
