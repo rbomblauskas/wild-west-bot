@@ -33,7 +33,9 @@ translations = {
         'remove_gold_description': "Removes gold from a user. Usage: `/remove_gold <name> <amount> <reason>`",
         'list_users_description': "Lists all registered users",
         'user_is_already_registered': "The Discord username **{dc_username}** is already registered.",
-        'invalid_language': 'Invalid language. Please use **"lt"** or **"en"**.'
+        'invalid_language': 'Invalid language. Please use **"lt"** or **"en"**.',
+        'welcome_title': 'Welcome to the Server!',
+        'welcome': "Hello {name}",
         
     },
     'lt': {
@@ -70,7 +72,9 @@ translations = {
         'remove_gold_description': "Atimą auksą iš vartotojo. Naudojimas: `/remove_gold <name> <amount> <reason>`",
         'list_users_description': "Parodo visus registruotus vartotojus",
         'user_is_already_registered': "Discord paskyra **{dc_username}** jau yra priregistruota.",
-        'invalid_language': 'Neteisinga kalba. Pasirinkite **"lt"** arba **"en"**.'
+        'invalid_language': 'Neteisinga kalba. Pasirinkite **"lt"** arba **"en"**.',
+        'welcome_title': 'Sveikas atvykęs į serverį!',
+        'welcome': "Labas {name}",
         
     },
 }

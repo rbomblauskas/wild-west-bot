@@ -1,6 +1,7 @@
 import discord
 import database
 from translations import translate
+import asyncio
 
 intents = discord.Intents.default()
 intents.members = True
@@ -13,7 +14,10 @@ async def on_ready():
     
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(1288951632200990886)
+    
+    await asyncio.sleep(2)
+    
+    channel = bot.get_channel(1295704772623601674)
     welcome_message_en = translate('en', 'welcome_message', dc_username=member.mention)
     welcome_message_lt = translate('lt', 'welcome_message', dc_username=member.mention)
     
@@ -65,6 +69,8 @@ class NameInputModal(discord.ui.Modal):
             color=discord.Color.red() 
         )
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            await self.assign_role()
+            await self.close_welcome_channel_and_redirect()
             return
 
         success, msg = database.register_user(name, self.member.name, self.language)
@@ -76,6 +82,8 @@ class NameInputModal(discord.ui.Modal):
             color=discord.Color.green()
         )
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            await self.assign_role()
+            await self.close_welcome_channel_and_redirect()    
         else:
             embed = discord.Embed(
             title=translate(self.language, 'registration'),
@@ -83,8 +91,33 @@ class NameInputModal(discord.ui.Modal):
             color=discord.Color.red()
         )
             await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+    async def assign_role(self):
+        if self.language == 'en':
+            role_id = 1295702840240504883
+        elif self.language == 'lt':
+            role_id = 1295703339756949545
 
+        role = self.member.guild.get_role(role_id)
+        if role:
+            await self.member.add_roles(role)
 
+    async def close_welcome_channel_and_redirect(self):
+
+        welcome_channel = self.member.guild.get_channel(1295704772623601674)
+        general_channel = self.member.guild.get_channel(1288951632200990886)
+
+        await asyncio.sleep(2)
+
+        await welcome_channel.set_permissions(self.member, view_channel=False)
+
+        welcome_embed = discord.Embed(
+            title=translate(self.language, 'welcome_title'),
+            description=translate(self.language, 'welcome', name=self.member.mention), 
+            color=discord.Color.green() 
+        )
+        
+        await general_channel.send(embed=welcome_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def hello(ctx):
@@ -211,6 +244,17 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
     
+    member = discord.utils.get(ctx.guild.members, name=dc_username)
+    
+    if member is None:
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'no_such_user', name=dc_username),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+    
     if database.is_user_registered(dc_username):
         embed = discord.Embed(
             title=translate(user_language, 'error'),
@@ -218,6 +262,8 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
             color=discord.Color.red()
         )
         await ctx.followup.send(embed=embed, ephemeral=True)
+        await assign_role(member, language)
+        await close_welcome_channel_and_redirect(member, language)
         return
     
     success, msg = database.register_user(name, dc_username, language)
@@ -230,6 +276,42 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
         color=discord.Color.green()
     )
     await ctx.followup.send(embed=embed, ephemeral=True)
+    await assign_role(member, language)
+    await close_welcome_channel_and_redirect(member, language)
+    
+async def assign_role(member: discord.Member, language: str):
+    
+    verified_role_id_lt = 1295703339756949545
+    verified_role_id_en = 1295702840240504883
+
+    if language == 'lt':
+        role_id = verified_role_id_lt
+    else:
+        role_id = verified_role_id_en
+
+    role = member.guild.get_role(role_id)
+    await member.add_roles(role)
+        
+async def close_welcome_channel_and_redirect(member: discord.Member, language: str):
+    
+    welcome_channel_id = 1295704772623601674 
+    general_channel_id = 1288951632200990886 
+
+    welcome_channel = member.guild.get_channel(welcome_channel_id)
+    general_channel = member.guild.get_channel(general_channel_id)
+
+    await asyncio.sleep(2)
+
+    await welcome_channel.set_permissions(member, view_channel=False)
+
+    welcome_embed = discord.Embed(
+        title=translate(language, 'welcome_title'),
+        description=translate(language, 'welcome', name=member.mention),
+        color=discord.Color.green()
+    )
+    
+    await general_channel.send(embed=welcome_embed)
+    
     
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def list_users(ctx):
