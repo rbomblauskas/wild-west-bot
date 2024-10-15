@@ -104,12 +104,9 @@ class NameInputModal(discord.ui.Modal):
 
     async def close_welcome_channel_and_redirect(self):
 
-        welcome_channel = self.member.guild.get_channel(1295704772623601674)
         general_channel = self.member.guild.get_channel(1288951632200990886)
 
         await asyncio.sleep(2)
-
-        await welcome_channel.set_permissions(self.member, view_channel=False)
 
         welcome_embed = discord.Embed(
             title=translate(self.language, 'welcome_title'),
@@ -294,15 +291,11 @@ async def assign_role(member: discord.Member, language: str):
         
 async def close_welcome_channel_and_redirect(member: discord.Member, language: str):
     
-    welcome_channel_id = 1295704772623601674 
     general_channel_id = 1288951632200990886 
 
-    welcome_channel = member.guild.get_channel(welcome_channel_id)
     general_channel = member.guild.get_channel(general_channel_id)
 
     await asyncio.sleep(2)
-
-    await welcome_channel.set_permissions(member, view_channel=False)
 
     welcome_embed = discord.Embed(
         title=translate(language, 'welcome_title'),
