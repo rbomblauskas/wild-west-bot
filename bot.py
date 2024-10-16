@@ -433,8 +433,95 @@ async def help(ctx):
         help_embed.add_field(name="/remove_gold", value=translate(user_language, 'remove_gold_description'), inline=False)
         help_embed.add_field(name="/list_users", value=translate(user_language, 'list_users_description'), inline=False)
         help_embed.add_field(name="/register_user", value=translate(user_language, 'register_user_description'), inline=False)
+        help_embed.add_field(name="/get_user_transactions", value=translate(user_language, 'get_user_transactions_description'), inline=False)
 
     await ctx.followup.send(embed=help_embed, ephemeral=True)
+    
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def get_user_transactions(ctx, dc_username: str):
+    await ctx.defer(ephemeral=True)
+
+    user_language = database.get_user_language(ctx.author.name)
+
+    if not database.is_authorized(ctx.author.name):
+        error_embed = discord.Embed(
+            title=translate(user_language, "error"),
+            description=translate(user_language, "user_is_not_authorized"),
+            color=discord.Colour.red(),
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+
+    transactions = database.get_user_transactions(dc_username)
+    transactions_per_page = 10
+    total_transactions = len(transactions)
+
+    if total_transactions == 0:
+        await ctx.followup.send(translate(user_language, 'no_transactions', dc_username=dc_username), ephemeral=True)
+        return
+
+    num_pages = (total_transactions + transactions_per_page - 1) // transactions_per_page
+    cur_page = 0
+
+    def create_embed(page):
+        start = page * transactions_per_page
+        end = start + transactions_per_page
+        transactions_page = transactions[start:end]
+
+        embed = discord.Embed(
+            title=translate(user_language, 'transactions_user', dc_username=dc_username, page=page + 1, num_pages=num_pages),
+            color=discord.Color.blue()
+        )
+        for index, transaction in enumerate(transactions_page, start=start + 1):
+            transaction_type = translate(user_language, 'gold_added')if transaction['transaction_type'] == "add" else translate(user_language, 'gold_removed')
+            amount = abs(transaction['amount'])
+            embed.add_field(
+                name=f"{index}. {transaction['timestamp'].strftime('%Y-%m-%d %H:%M:%S')} - {amount} {translate(user_language, 'gold')}",
+                value=f"**{translate(user_language, 'sender')}:** {transaction['sender']}\n"
+                f"**{transaction_type}:** {amount}\n"
+                f"**{translate(user_language, 'reason')}:** {transaction['reason']}", inline=False
+        )
+
+        return embed
+
+    message = await ctx.followup.send(embed=create_embed(cur_page), ephemeral=True)
+
+    previous_button = discord.ui.Button(label=translate(user_language, 'previous_button'), style=discord.ButtonStyle.primary, disabled=True)
+    next_button = discord.ui.Button(label=translate(user_language, 'next_button'), style=discord.ButtonStyle.primary)
+
+    view = discord.ui.View()
+    view.add_item(previous_button)
+    view.add_item(next_button)
+
+    def update_buttons():
+        previous_button.disabled = cur_page == 0
+        next_button.disabled = cur_page >= num_pages - 1
+
+    update_buttons()
+
+    async def button_callback(interaction: discord.Interaction):
+        nonlocal cur_page
+        if interaction.user != ctx.author:
+            await interaction.response.send_message(translate(user_language, 'not_your_button'), ephemeral=True)
+            return
+        
+        if interaction.data['custom_id'] == "next_button":
+            if cur_page < num_pages - 1:
+                cur_page += 1
+        elif interaction.data['custom_id'] == "previous_button":
+            if cur_page > 0:
+                cur_page -= 1
+
+        await message.edit(embed=create_embed(cur_page))
+        update_buttons() 
+        await interaction.response.edit_message(view=view)
+
+    previous_button.callback = button_callback
+    previous_button.custom_id = "previous_button"
+    next_button.callback = button_callback
+    next_button.custom_id = "next_button"
+
+    await message.edit(view=view) 
 
 
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")

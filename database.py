@@ -48,7 +48,8 @@ def add_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool
             "receiver": receiver,
             "amount": amount,
             "reason": reason,
-            "timestamp": datetime.datetime.now()
+            "timestamp": datetime.datetime.now(),
+            "transaction_type": "add"
         }
         doc_ref.set(data)
         return (True, new_balance)
@@ -86,7 +87,8 @@ def remove_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[b
             "receiver": receiver,
             "amount": amount,
             "reason": reason,
-            "timestamp": datetime.datetime.now()
+            "timestamp": datetime.datetime.now(),
+            "transaction_type": "remove"
         }
         doc_ref.set(data)
         return (True, new_balance)
@@ -133,3 +135,7 @@ def get_user_language(dc_username: str) -> str:
     user_data = user_doc.to_dict()
     language = user_data.get('language', 'en') 
     return language
+
+def get_user_transactions(dc_username: str):
+    transactions_ref = db.collection('transactions').where(filter=FieldFilter('receiver', '==', dc_username)).get()
+    return [transaction.to_dict() for transaction in transactions_ref]
