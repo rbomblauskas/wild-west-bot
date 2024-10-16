@@ -36,6 +36,7 @@ translations = {
         'invalid_language': 'Invalid language. Please use **"lt"** or **"en"**.',
         'welcome_title': 'Welcome to the Server!',
         'welcome': "Hello {name}",
+        'role_assigned': "Role assigned to user {name}",
         
     },
     'lt': {
@@ -75,7 +76,7 @@ translations = {
         'invalid_language': 'Neteisinga kalba. Pasirinkite **"lt"** arba **"en"**.',
         'welcome_title': 'Sveikas atvykęs į serverį!',
         'welcome': "Labas {name}",
-        
+        'role_assigned': "Vartotojas {name} patvirtintas",
     },
 }
 

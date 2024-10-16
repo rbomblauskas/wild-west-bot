@@ -253,15 +253,24 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
         return
     
     if database.is_user_registered(dc_username):
-        embed = discord.Embed(
-            title=translate(user_language, 'error'),
-            description=translate(user_language, 'user_is_already_registered', dc_username=dc_username),
-            color=discord.Color.red()
-        )
-        await ctx.followup.send(embed=embed, ephemeral=True)
-        await assign_role(member, language)
-        await close_welcome_channel_and_redirect(member, language)
-        return
+        
+        if await user_has_role(member, language):
+            embed = discord.Embed(
+                title=translate(user_language, 'registration'),
+                description=translate(user_language, 'user_is_already_registered', dc_username=dc_username),
+                color=discord.Color.red()
+            )
+            await ctx.followup.send(embed=embed, ephemeral=True)
+            return
+        else:
+            await assign_role(member, language)
+            embed = discord.Embed(
+                title=translate(user_language, 'registration'),
+                description=translate(user_language, 'role_assigned', name=dc_username),
+                color=discord.Color.green()
+            )
+            await ctx.followup.send(embed=embed, ephemeral=True)
+            return
     
     success, msg = database.register_user(name, dc_username, language)
     if not success:
@@ -275,6 +284,17 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
     await ctx.followup.send(embed=embed, ephemeral=True)
     await assign_role(member, language)
     await close_welcome_channel_and_redirect(member, language)
+    
+async def user_has_role(member: discord.Member, language: str) -> bool:
+    if language == 'lt':
+        role_id = 1295703339756949545
+    elif language == 'en':
+        role_id = 1295702840240504883
+    else: 
+        return False
+
+    role = member.guild.get_role(role_id)
+    return role in member.roles
     
 async def assign_role(member: discord.Member, language: str):
     
