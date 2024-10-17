@@ -551,5 +551,48 @@ async def event(ctx):
     embed.set_footer(text=translate(user_language, 'legend'))
 
     await ctx.followup.send(embed=embed, ephemeral=True)
+    
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def add_moderator(ctx, member: discord.Member):
+    await ctx.defer(ephemeral=True)
+    invoking_user_dc_username = ctx.author.name
 
+    if not database.is_authorized(invoking_user_dc_username):
+        embed = discord.Embed(
+            title="Permission Denied",
+            description="You don't have permission to add moderators.",
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+    
+    if database.is_authorized(member.name):
+        embed = discord.Embed(
+            title="Moderator Check",
+            description=f"User **{member.mention}** is already a moderator.",
+            color=discord.Color.orange()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+
+    database.add_moderator_to_db(member.id, member.name)
+
+    MODERATOR_ROLE_ID = 1296522020078747730
+    moderator_role = ctx.guild.get_role(MODERATOR_ROLE_ID)
+
+    if moderator_role:
+        await member.add_roles(moderator_role)
+        
+        embed = discord.Embed(
+            title="Moderator Added",
+            description=f"**{member.display_name}** has been successfully added as a Moderator.",
+            color=discord.Color.green() 
+        )
+        embed.add_field(name="Assigned Role", value=moderator_role.name, inline=True)
+        embed.add_field(name="Moderator ID", value=member.id, inline=True)
+        embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+        embed.set_footer(text="Action performed by: " + ctx.author.display_name)
+        
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")

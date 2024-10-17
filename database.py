@@ -139,3 +139,7 @@ def get_user_language(dc_username: str) -> str:
 def get_user_transactions(dc_username: str):
     transactions_ref = db.collection('transactions').where(filter=FieldFilter('receiver', '==', dc_username)).get()
     return [transaction.to_dict() for transaction in transactions_ref]
+
+def add_moderator_to_db(member_id: str, dc_username: str) -> None:
+    new_admin_ref = db.collection('admins').document(str(member_id))
+    new_admin_ref.set({'dc_username': dc_username})
