@@ -70,7 +70,6 @@ class NameInputModal(discord.ui.Modal):
         )
             await interaction.response.send_message(embed=embed, ephemeral=True)
             await self.assign_role()
-            await self.close_welcome_channel_and_redirect()
             return
 
         success, msg = database.register_user(name, self.member.name, self.language)
@@ -110,9 +109,13 @@ class NameInputModal(discord.ui.Modal):
 
         welcome_embed = discord.Embed(
             title=translate(self.language, 'welcome_title'),
-            description=translate(self.language, 'welcome', name=self.member.mention), 
-            color=discord.Color.green() 
+            description=translate(self.language, 'welcome1', name=self.member.mention) +
+                        translate(self.language, 'welcome2') +
+                        translate(self.language, 'welcome3'),
+            color=discord.Color.from_rgb(212, 184, 146) 
         )
+        
+        welcome_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
         
         await general_channel.send(embed=welcome_embed)
 
@@ -420,11 +423,12 @@ async def help(ctx):
     help_embed = discord.Embed(
         title=translate(user_language, 'available_commands'),
         description=translate(user_language, 'here_are_commands'),
-        color=discord.Colour.blue(),
+        color=discord.Colour.from_rgb(139, 69, 19),
     )
 
     # NON-ADMIN
     help_embed.add_field(name="/hello", value="Says hi.", inline=False)
+    help_embed.add_field(name="/event", value=translate(user_language, 'event_description'))
     help_embed.add_field(name="/get_user_by_name", value=translate(user_language, 'get_user_by_name_description'), inline=False)
 
     if database.is_authorized(invoking_user_dc_username):
@@ -435,6 +439,8 @@ async def help(ctx):
         help_embed.add_field(name="/register_user", value=translate(user_language, 'register_user_description'), inline=False)
         help_embed.add_field(name="/get_user_transactions", value=translate(user_language, 'get_user_transactions_description'), inline=False)
 
+    help_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+    
     await ctx.followup.send(embed=help_embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
@@ -523,5 +529,27 @@ async def get_user_transactions(ctx, dc_username: str):
 
     await message.edit(view=view) 
 
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def event(ctx):
+    await ctx.defer(ephemeral=True)
+    
+    user_language = database.get_user_language(ctx.author.name)
+        
+    embed = discord.Embed(
+        title=translate(user_language, 'micius_quest'),
+        description=translate(user_language, 'event1') + 
+                    translate(user_language, 'event2') + 
+                    translate(user_language, 'event3') + 
+                    translate(user_language, 'event4'), 
+        color=discord.Color.gold()
+    )
+
+    embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+    embed.set_image(url="https://i.imgur.com/ezKiTCS.jpeg")
+    embed.add_field(name=translate(user_language, 'join_quest'), value=translate(user_language, 'gather_team'), inline=False)
+    embed.add_field(name=translate(user_language, 'start_earning_gold'), value=translate(user_language, 'use_command'), inline=False)
+    embed.set_footer(text=translate(user_language, 'legend'))
+
+    await ctx.followup.send(embed=embed, ephemeral=True)
 
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
