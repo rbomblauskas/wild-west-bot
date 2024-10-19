@@ -4,6 +4,7 @@ from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
 import datetime
 from typing import Tuple
+from translations import translate
 
 # Use a service account.
 cred = credentials.Certificate('mif-renginys-firebase-adminsdk-ld2k1-dbbfebe5f1.json')
@@ -18,13 +19,13 @@ def get_user_by_name(name: str):
     user_data = user_doc.to_dict()
     return user_data
 
-def add_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool, str]:
+def add_gold(sender: str, receiver: str, amount: int, reason: str, user_language: str) -> Tuple[bool, str]:
     try:
         if amount <= 0:
-            return (False, 'Not a valid amount')
+            return (False, translate(user_language, 'invalid_amount'))
         user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', receiver)).limit(1).get()
         if not user_ref:
-            return (False, 'No such user')
+            return (False, translate(user_language, 'no_such_user', name=receiver))
 
         transaction = db.transaction()
         user_doc_ref = user_ref[0].reference
@@ -56,13 +57,13 @@ def add_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool
     except Exception as e:
         return (False, str(e))
     
-def remove_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[bool, str]:
+def remove_gold(sender: str, receiver: str, amount: int, reason: str, user_language: str, transaction_type="remove") -> Tuple[bool, str]:
     try:
         if amount <= 0:
-            return (False, 'Not a valid amount')
+            return (False, translate(user_language, 'invalid_amount'))
         user_ref = db.collection('users').where(filter=FieldFilter('dc_username', '==', receiver)).limit(1).get()
         if not user_ref:
-            return (False, 'No such user')
+            return (False, translate(user_language, 'no_such_user', name=receiver))
 
         transaction = db.transaction()
         user_doc_ref = user_ref[0].reference
@@ -72,7 +73,7 @@ def remove_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[b
             snapshot = user_doc_ref.get(transaction=transaction)
             new_balance = snapshot.get("gold") - amount
             if new_balance < 0:
-                return(False, 'Insufficient funds')
+                return(False, translate(user_language, 'insufficient_funds'))
             transaction.update(user_doc_ref, {"gold": new_balance})
             return (True, new_balance)
 
@@ -88,7 +89,7 @@ def remove_gold(sender: str, receiver: str, amount: int, reason: str) -> Tuple[b
             "amount": amount,
             "reason": reason,
             "timestamp": datetime.datetime.now(),
-            "transaction_type": "remove"
+            "transaction_type": transaction_type,
         }
         doc_ref.set(data)
         return (True, new_balance)
@@ -143,3 +144,21 @@ def get_user_transactions(dc_username: str):
 def add_moderator_to_db(member_id: str, dc_username: str) -> None:
     new_admin_ref = db.collection('admins').document(str(member_id))
     new_admin_ref.set({'dc_username': dc_username})
+    
+def can_user_afford_item(dc_username: str, item_price: int) -> bool:
+    user_data = get_user_by_name(dc_username)
+    if not user_data:
+        return False
+    user_gold = user_data.get("gold", 0)
+    return user_gold >= item_price
+
+def buy_item(sender: str, receiver: str, item_price: int, item_name: str, user_language: str) -> Tuple[bool, str]:
+    purchase_reason = translate(user_language, 'purchase_reason', item=item_name)
+    success, message = remove_gold(sender=sender, receiver=receiver, amount=item_price, reason=purchase_reason, user_language=user_language, transaction_type="purchase")
+    
+    return success, message
+
+    
+    
+
+

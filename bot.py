@@ -165,7 +165,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
-    success, msg = database.add_gold(ctx.author.name, name, amount, reason)
+    success, msg = database.add_gold(ctx.author.name, name, amount, reason, user_language)
     if not success:
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
@@ -199,7 +199,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
-    success, msg = database.remove_gold(ctx.author.name, name, amount, reason)
+    success, msg = database.remove_gold(ctx.author.name, name, amount, reason, user_language)
     if not success:
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
@@ -430,6 +430,7 @@ async def help(ctx):
     help_embed.add_field(name="/hello", value="Says hi.", inline=False)
     help_embed.add_field(name="/event", value=translate(user_language, 'event_description'))
     help_embed.add_field(name="/get_user_by_name", value=translate(user_language, 'get_user_by_name_description'), inline=False)
+    help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
 
     if database.is_authorized(invoking_user_dc_username):
         # ADMIN
@@ -438,6 +439,7 @@ async def help(ctx):
         help_embed.add_field(name="/list_users", value=translate(user_language, 'list_users_description'), inline=False)
         help_embed.add_field(name="/register_user", value=translate(user_language, 'register_user_description'), inline=False)
         help_embed.add_field(name="/get_user_transactions", value=translate(user_language, 'get_user_transactions_description'), inline=False)
+        help_embed.add_field(name="/buy_item", value=translate(user_language, 'buy_item_description'), inline=False)
 
     help_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     
@@ -594,5 +596,103 @@ async def add_moderator(ctx, member: discord.Member):
         embed.set_footer(text="Action performed by: " + ctx.author.display_name)
         
         await ctx.followup.send(embed=embed, ephemeral=True)
+        
+def create_shop_items(ctx) -> dict:
+    user_language = database.get_user_language(ctx.author.name)
+    return {
+        
+        translate(user_language, 'MIDI t-shirt'): 100,
+        translate(user_language, 'Lemon Gym Subscription'): 200,
+        translate(user_language, 'Random'): 300,
+    }
+      
+    
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def view_shop(ctx):
+    user_language = database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
+    shop_items = create_shop_items(ctx)
+    translated_gold = translate(user_language, 'gold1')
+    
+    shop_list = "\n\n".join([f"**{item}**: {price} {translated_gold}" for item, price in shop_items.items()])
+    
+    embed = discord.Embed(
+        title=translate(user_language, 'available_items'),
+        description=shop_list,
+        color=discord.Color.gold()
+    )
+    embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+    embed.set_footer(text=translate(user_language, 'shop_footer'))
+    
+    await ctx.followup.send(embed=embed, ephemeral=True)
+    
+@bot.slash_command(guild_ids=[1288951632200990881])
+async def buy_item(ctx, member: discord.Member, item: str):
+    user_language = database.get_user_language(ctx.author.name)
+    await ctx.defer(ephemeral=True)
+
+    if not database.is_authorized(ctx.user.name):
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'user_is_not_authorized'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+
+    shop_items = create_shop_items(ctx)
+    
+    normalized_item_name = item.lower().strip().replace("**", "")
+
+    matching_item = next((item for item in shop_items if item.lower() == normalized_item_name), None)
+    
+    if matching_item is None:
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'item_not_found'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+    
+    item_price = shop_items[matching_item]
+
+    if not database.is_user_registered(member.name):
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'no_such_user', name=member.name),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+
+    if not database.can_user_afford_item(member.name, item_price):
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'not_enough_gold', name=member.name, item=matching_item),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+
+    success, message = database.buy_item(sender=ctx.user.name, receiver=member.name, item_price=item_price, item_name=matching_item, user_language=user_language)
+    
+    if success:
+        embed = discord.Embed(
+            title=translate(user_language, 'success'),
+            description=translate(user_language, 'purchase_successfull', name=member.name, item=matching_item, item_price=item_price),
+            color=discord.Color.green()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+    else:
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'error'),
+            color=discord.Color.red()
+        )
+        
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        
         
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")

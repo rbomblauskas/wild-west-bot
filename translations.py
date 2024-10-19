@@ -55,7 +55,21 @@ translations = {
         'start_earning_gold': '💰 Start earning gold:',
         'use_command': 'Use command `/show_activities` to see all activities!',
         'legend': 'Will you become legend in the Wild West?',
-        'event_description': "Shows event information."
+        'event_description': "Shows event information.",
+        'gold1': "Gold",
+        'available_items': "🤠 **Ranger Micius shop:** 🤠",
+        'shop_footer': "If you want to buy, go to the shop moderator!",
+        'MIDI t-shirt': 'MIDI t-shirt',
+        'Lemon Gym Subscription': 'Lemon Gym Subscription',
+        'item_not_found': "Item not found in the shop!",
+        'not_enough_gold': "{name} does not have enough gold to buy {item}",
+        'purchase_reason': "Purchase of {item}",
+        'purchase_successfull': "{name} has successfully purchased {item} for {item_price} gold.",
+        'success': "Successfully",
+        'invalid_amount': "Not a valid amount",
+        'insufficient_funds': "User does not have this much gold",
+        'buy_item_description': "Moderator can buy an item for a user. Usage: `/buy_item <dc_username> <item_name>` ",
+        'view_shop_description': "You can view Ranger Micius shop items",
         
     },
     'lt': {
@@ -114,7 +128,22 @@ translations = {
         'start_earning_gold': '💰 Pradėk rinkti auksą:',
         'use_command': 'Panaudok komandą `/show_activities`, kad pamatytum visas veiklas!',
         'legend': 'Ar tapsi laukinių vakarų žvaigžde?',
-        'event_description': "Parodo renginio informaciją."
+        'event_description': "Parodo renginio informaciją.",
+        'gold1': "Aukso",
+        'available_items': "🤠 **Reindžerio Miciaus krautuvėlė:** 🤠",
+        'shop_footer': "Jeigu norite nusipirkti kreipkitės į krautuvėlės moderatorių!",
+        'MIDI t-shirt': 'MIDI maikutė',
+        'Lemon Gym Subscription': 'Lemon Gym prenumerata',
+        'item_not_found': "Tokio daikto parduotuvėje nėra!",
+        'not_enough_gold': "{name} neturi pakankamai aukso, kad nusipirktų {item}",
+        'purchase_reason': "Nusipirko daiktą: {item}",
+        'purchase_successfull': "{name} sėkmingai nusipirko {item} už {item_price} aukso.",
+        'success': "Sėkmingai",
+        'invalid_amount': "Neteisinga suma",
+        'insufficient_funds': "Vartotojas neturi tiek aukso",
+        'buy_item_description': "Moderatorius gali nupirkti daiktą vartotojui. Naudojimas: `/buy_item <dc_username> <item_name>` ",
+        'view_shop_description': "Galite peržiūrėti Reindžerio Miciaus krautuvėlę",
+        
     },
 }
 
