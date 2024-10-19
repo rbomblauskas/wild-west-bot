@@ -62,7 +62,7 @@ class NameInputModal(discord.ui.Modal):
     async def callback(self, interaction: discord.Interaction):
         name = self.children[0].value
 
-        if database.is_user_registered(self.member.name):
+        if await database.is_user_registered(self.member.name):
             embed = discord.Embed(
             title=translate(self.language, 'registration'),
             description=translate(self.language, 'already_registered'),
@@ -72,7 +72,7 @@ class NameInputModal(discord.ui.Modal):
             await self.assign_role()
             return
 
-        success, msg = database.register_user(name, self.member.name, self.language)
+        success, msg = await database.register_user(name, self.member.name, self.language)
         
         if success:
             embed = discord.Embed(
@@ -128,8 +128,8 @@ async def get_user_by_name(ctx, name: str):
     
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
-    user_data = database.get_user_by_name(name)
+    user_language = await database.get_user_language(ctx.author.name)
+    user_data = await database.get_user_by_name(name)
     
     if not user_data:  
         error_embed = discord.Embed(
@@ -155,9 +155,9 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
     
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     
-    if not database.is_authorized(ctx.author.name):        
+    if not await database.is_authorized(ctx.author.name):        
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
             description=translate(user_language, "user_is_not_authorized"),
@@ -165,7 +165,7 @@ async def add_gold(ctx, name: str, amount: int, reason: str):
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
-    success, msg = database.add_gold(ctx.author.name, name, amount, reason, user_language)
+    success, msg = await database.add_gold(ctx.author.name, name, amount, reason, user_language)
     if not success:
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
@@ -189,9 +189,9 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
     
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     
-    if not database.is_authorized(ctx.author.name):        
+    if not await database.is_authorized(ctx.author.name):        
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
             description=translate(user_language, "user_is_not_authorized"),
@@ -199,7 +199,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
-    success, msg = database.remove_gold(ctx.author.name, name, amount, reason, user_language)
+    success, msg = await database.remove_gold(ctx.author.name, name, amount, reason, user_language)
     if not success:
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
@@ -223,10 +223,10 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
     
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     invoking_user_dc_username = ctx.author.name
     
-    if not database.is_authorized(invoking_user_dc_username): 
+    if not await database.is_authorized(invoking_user_dc_username): 
         embed = discord.Embed(
             title=translate(user_language, 'error'),
             description=translate(user_language, 'user_is_not_authorized'),
@@ -255,7 +255,7 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
     
-    if database.is_user_registered(dc_username):
+    if await database.is_user_registered(dc_username):
         
         if await user_has_role(member, language):
             embed = discord.Embed(
@@ -275,7 +275,7 @@ async def register_user(ctx, name: str, dc_username: str, language: str):
             await ctx.followup.send(embed=embed, ephemeral=True)
             return
     
-    success, msg = database.register_user(name, dc_username, language)
+    success, msg = await database.register_user(name, dc_username, language)
     if not success:
         await ctx.followup.send(msg, ephemeral=True) 
         return
@@ -334,9 +334,9 @@ async def list_users(ctx):
     
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     
-    if not database.is_authorized(ctx.author.name):        
+    if not await database.is_authorized(ctx.author.name):        
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
             description=translate(user_language, "user_is_not_authorized"),
@@ -345,7 +345,7 @@ async def list_users(ctx):
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
     
-    users = database.get_all_users()
+    users = await database.get_all_users()
     users = sorted(users, key=lambda x: x['gold'], reverse=True)
     
     pages = 5 
@@ -419,7 +419,7 @@ async def help(ctx):
     
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     invoking_user_dc_username = ctx.author.name
 
     help_embed = discord.Embed(
@@ -434,7 +434,7 @@ async def help(ctx):
     help_embed.add_field(name="/get_user_by_name", value=translate(user_language, 'get_user_by_name_description'), inline=False)
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
 
-    if database.is_authorized(invoking_user_dc_username):
+    if await database.is_authorized(invoking_user_dc_username):
         # ADMIN
         help_embed.add_field(name="/add_gold", value=translate(user_language, 'add_gold_description'), inline=False)
         help_embed.add_field(name="/remove_gold", value=translate(user_language, 'remove_gold_description'), inline=False)
@@ -451,9 +451,9 @@ async def help(ctx):
 async def get_user_transactions(ctx, dc_username: str):
     await ctx.defer(ephemeral=True)
 
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
 
-    if not database.is_authorized(ctx.author.name):
+    if not await database.is_authorized(ctx.author.name):
         error_embed = discord.Embed(
             title=translate(user_language, "error"),
             description=translate(user_language, "user_is_not_authorized"),
@@ -462,7 +462,7 @@ async def get_user_transactions(ctx, dc_username: str):
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         return
 
-    transactions = database.get_user_transactions(dc_username)
+    transactions = await database.get_user_transactions(dc_username)
     transactions_per_page = 10
     total_transactions = len(transactions)
 
@@ -537,7 +537,7 @@ async def get_user_transactions(ctx, dc_username: str):
 async def event(ctx):
     await ctx.defer(ephemeral=True)
     
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
         
     embed = discord.Embed(
         title=translate(user_language, 'micius_quest'),
@@ -561,7 +561,7 @@ async def add_moderator(ctx, member: discord.Member):
     await ctx.defer(ephemeral=True)
     invoking_user_dc_username = ctx.author.name
 
-    if not database.is_authorized(invoking_user_dc_username):
+    if not await database.is_authorized(invoking_user_dc_username):
         embed = discord.Embed(
             title="Permission Denied",
             description="You don't have permission to add moderators.",
@@ -570,7 +570,7 @@ async def add_moderator(ctx, member: discord.Member):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
     
-    if database.is_authorized(member.name):
+    if await database.is_authorized(member.name):
         embed = discord.Embed(
             title="Moderator Check",
             description=f"User **{member.mention}** is already a moderator.",
@@ -579,7 +579,7 @@ async def add_moderator(ctx, member: discord.Member):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
 
-    database.add_moderator_to_db(member.id, member.name)
+    await database.add_moderator_to_db(member.id, member.name)
 
     MODERATOR_ROLE_ID = 1296522020078747730
     moderator_role = ctx.guild.get_role(MODERATOR_ROLE_ID)
@@ -598,23 +598,14 @@ async def add_moderator(ctx, member: discord.Member):
         embed.set_footer(text="Action performed by: " + ctx.author.display_name)
         
         await ctx.followup.send(embed=embed, ephemeral=True)
-        
-def create_shop_items(ctx) -> dict:
-    user_language = database.get_user_language(ctx.author.name)
-    return {
-        
-        translate(user_language, 'MIDI t-shirt'): 100,
-        translate(user_language, 'Lemon Gym Subscription'): 200,
-        translate(user_language, 'Random'): 300,
-    }
       
     
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def view_shop(ctx):
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     
     await ctx.defer(ephemeral=True)
-    shop_items = create_shop_items(ctx)
+    shop_items = await database.get_shop_items(ctx)
     translated_gold = translate(user_language, 'gold1')
     
     shop_list = "\n\n".join([f"**{item}**: {price} {translated_gold}" for item, price in shop_items.items()])
@@ -631,10 +622,10 @@ async def view_shop(ctx):
     
 @bot.slash_command(guild_ids=[1288951632200990881])
 async def buy_item(ctx, member: discord.Member, item: str):
-    user_language = database.get_user_language(ctx.author.name)
+    user_language = await database.get_user_language(ctx.author.name)
     await ctx.defer(ephemeral=True)
 
-    if not database.is_authorized(ctx.user.name):
+    if not await database.is_authorized(ctx.user.name):
         embed = discord.Embed(
             title=translate(user_language, 'error'),
             description=translate(user_language, 'user_is_not_authorized'),
@@ -643,7 +634,7 @@ async def buy_item(ctx, member: discord.Member, item: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
 
-    shop_items = create_shop_items(ctx)
+    shop_items = await database.get_shop_items(user_language)
     
     normalized_item_name = item.lower().strip().replace("**", "")
 
@@ -660,7 +651,7 @@ async def buy_item(ctx, member: discord.Member, item: str):
     
     item_price = shop_items[matching_item]
 
-    if not database.is_user_registered(member.name):
+    if not await database.is_user_registered(member.name):
         embed = discord.Embed(
             title=translate(user_language, 'error'),
             description=translate(user_language, 'no_such_user', name=member.name),
@@ -669,7 +660,7 @@ async def buy_item(ctx, member: discord.Member, item: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
 
-    if not database.can_user_afford_item(member.name, item_price):
+    if not await database.can_user_afford_item(member.name, item_price):
         embed = discord.Embed(
             title=translate(user_language, 'error'),
             description=translate(user_language, 'not_enough_gold', name=member.name, item=matching_item),
@@ -678,7 +669,7 @@ async def buy_item(ctx, member: discord.Member, item: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         return
 
-    success, message = database.buy_item(sender=ctx.user.name, receiver=member.name, item_price=item_price, item_name=matching_item, user_language=user_language)
+    success, message = await database.buy_item(sender=ctx.user.name, receiver=member.name, item_price=item_price, item_name=matching_item, user_language=user_language)
     
     if success:
         embed = discord.Embed(
