@@ -346,6 +346,8 @@ async def list_users(ctx):
         return
     
     users = database.get_all_users()
+    users = sorted(users, key=lambda x: x['gold'], reverse=True)
+    
     pages = 5 
     total_users = len(users)
 
