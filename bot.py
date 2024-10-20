@@ -434,6 +434,7 @@ async def help(ctx):
     help_embed.add_field(name="/get_user_by_name", value=translate(user_language, 'get_user_by_name_description'), inline=False)
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
     help_embed.add_field(name="/balance", value=translate(user_language, 'balance_command_description'), inline=False)
+    help_embed.add_field(name="/show_activities", value=translate(user_language, 'show_activities_description'), inline=False)
 
 
     if await database.is_authorized(invoking_user_dc_username):
@@ -711,6 +712,43 @@ async def balance(ctx):
         color=discord.Color.gold()
     )
     await ctx.followup.send(embed=embed, ephemeral=True)
-        
+    
+@bot.slash_command(guild_ids=[1288951632200990881])    
+async def show_activities(ctx):
+    
+    await ctx.defer(ephemeral=True)
+    
+    user_language = await database.get_user_language(ctx.author.name)
+
+    activities_embed = discord.Embed(
+        title=translate(user_language, 'available_activities'),
+        description=translate(user_language, 'here_are_activities'),
+        color=discord.Colour.from_rgb(139, 69, 19),
+    )
+
+    activities_embed.add_field(name=translate(user_language, 'monster'), value=translate(user_language, 'monster_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'horseshoe_throw'), value=translate(user_language, 'horseshoe_throw_description'))
+    activities_embed.add_field(name=translate(user_language, 'cactus'), value=translate(user_language, 'cactus_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'catching_micius'), value=translate(user_language, 'catching_micius_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'apple_bobbing'), value=translate(user_language, 'apple_bobbing_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'wild_west_duel'), value=translate(user_language, 'wild_west_duel_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'cup_pyramid_shooting'), value=translate(user_language, 'cup_pyramid_description'))
+    activities_embed.add_field(name=translate(user_language, 'shoot_a_line_of_cups'), value=translate(user_language, 'line_cups_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'target_shooting'), value=translate(user_language, 'target_shooting_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'shoot_apple_from_head'), value=translate(user_language, 'apple_from_head_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'gold_searching'), value=translate(user_language, 'gold_searching_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'horse_tail'), value=translate(user_language, 'horse_tail_description'))
+    activities_embed.add_field(name=translate(user_language, 'dancing'), value=translate(user_language, 'dancing_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'bull'), value=translate(user_language, 'bull_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'trivia'), value=translate(user_language, 'trivia_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'karaoke'), value=translate(user_language, 'karaoke_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'charades'), value=translate(user_language, 'charades_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'treasure_hunt'), value=translate(user_language, 'treasure_hunt_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'orienteering_race'), value=translate(user_language, 'orienteering_description'), inline=False)
+
+    activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+    
+    await ctx.followup.send(embed=activities_embed, ephemeral=True)
+          
         
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
