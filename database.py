@@ -167,6 +167,18 @@ async def get_shop_items(language: str) -> dict:
         translate(language, 'Lemon Gym Subscription'): 200,
         translate(language, 'Random'): 300,
     }
+    
+async def get_user_balance(dc_username: str, user_language: str) -> Tuple[bool, int]:
+    try:
+        user_data = await get_user_by_name(dc_username)
+        if not user_data:
+            return (False, 0)
+        user_gold = user_data.get("gold", 0)
+        return (True, user_gold)
+    except Exception as e:
+        print(translate(user_language, 'error'), {e})
+        return (False, 0)
+
 
     
     

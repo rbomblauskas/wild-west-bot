@@ -142,7 +142,7 @@ async def get_user_by_name(ctx, name: str):
     
     user_embed = discord.Embed(
             title=translate(user_language, 'user_data'),
-            color=discord.Colour.blue(),
+            color=discord.Colour.gold(),
     )
     user_embed.add_field(name=translate(user_language, 'name'), value=user_data['name'], inline=True)
     user_embed.add_field(name=translate(user_language, 'discord_username'), value=user_data['dc_username'], inline=True)
@@ -433,6 +433,8 @@ async def help(ctx):
     help_embed.add_field(name="/event", value=translate(user_language, 'event_description'))
     help_embed.add_field(name="/get_user_by_name", value=translate(user_language, 'get_user_by_name_description'), inline=False)
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
+    help_embed.add_field(name="/balance", value=translate(user_language, 'balance_command_description'), inline=False)
+
 
     if await database.is_authorized(invoking_user_dc_username):
         # ADMIN
@@ -686,6 +688,29 @@ async def buy_item(ctx, member: discord.Member, item: str):
         )
         
         await ctx.followup.send(embed=embed, ephemeral=True)
+        
+@bot.slash_command(guild_ids=[1288951632200990881])        
+async def balance(ctx):
+    user_language = await database.get_user_language(ctx.author.name)
+    await ctx.defer(ephemeral=True) 
+
+    success, user_gold = await database.get_user_balance(ctx.author.name, user_language)
+
+    if not success:
+        embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'no_such_user', name=ctx.author.name),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=embed, ephemeral=True)
+        return
+
+    embed = discord.Embed(
+        title=translate(user_language, 'balance_title', name=ctx.author.name),
+        description=translate(user_language, 'balance_description', gold=user_gold),
+        color=discord.Color.gold()
+    )
+    await ctx.followup.send(embed=embed, ephemeral=True)
         
         
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")

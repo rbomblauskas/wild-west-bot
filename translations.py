@@ -70,6 +70,9 @@ translations = {
         'insufficient_funds': "User does not have this much gold",
         'buy_item_description': "Moderator can buy an item for a user. Usage: `/buy_item <dc_username> <item_name>` ",
         'view_shop_description': "You can view Ranger Micius shop items",
+        'balance_title': "💰 **Your balance** 💰",
+        'balance_description': "You have **{gold}** gold.",
+        'balance_command_description': "Shows how much gold you have.",
         
     },
     'lt': {
@@ -143,6 +146,10 @@ translations = {
         'insufficient_funds': "Vartotojas neturi tiek aukso",
         'buy_item_description': "Moderatorius gali nupirkti daiktą vartotojui. Naudojimas: `/buy_item <dc_username> <item_name>` ",
         'view_shop_description': "Galite peržiūrėti Reindžerio Miciaus krautuvėlę",
+        'balance_title': "💰 **Jūsų balansas** 💰",
+        'balance_description': "Turite **{gold}** aukso.",
+        'balance_command_description': "Parodo kiek turite aukso.",
+        
         
     },
 }
