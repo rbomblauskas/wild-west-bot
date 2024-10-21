@@ -726,6 +726,8 @@ async def show_activities(ctx):
         color=discord.Colour.from_rgb(139, 69, 19),
     )
 
+    activities_embed.add_field(name=translate(user_language, 'main_activities'), value="", inline=False)  
+    
     activities_embed.add_field(name=translate(user_language, 'monster'), value=translate(user_language, 'monster_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'horseshoe_throw'), value=translate(user_language, 'horseshoe_throw_description'))
     activities_embed.add_field(name=translate(user_language, 'cactus'), value=translate(user_language, 'cactus_description'), inline=False)
@@ -739,12 +741,19 @@ async def show_activities(ctx):
     activities_embed.add_field(name=translate(user_language, 'gold_searching'), value=translate(user_language, 'gold_searching_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'horse_tail'), value=translate(user_language, 'horse_tail_description'))
     activities_embed.add_field(name=translate(user_language, 'dancing'), value=translate(user_language, 'dancing_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'charades'), value=translate(user_language, 'charades_description'), inline=False)
+    
+    activities_embed.add_field(name=translate(user_language, 'additional_activities'), value="",inline=False)
+    
     activities_embed.add_field(name=translate(user_language, 'bull'), value=translate(user_language, 'bull_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'trivia'), value=translate(user_language, 'trivia_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'escape_room'), value=translate(user_language, 'escape_room_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'karaoke'), value=translate(user_language, 'karaoke_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'charades'), value=translate(user_language, 'charades_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'sack_jumping_race'), value=translate(user_language, 'sack_jumping_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'treasure_hunt'), value=translate(user_language, 'treasure_hunt_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'orienteering_race'), value=translate(user_language, 'orienteering_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'poker'), value=translate(user_language, 'poker_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'blackjack'), value=translate(user_language, 'blackjack_description'), inline=False)
+    activities_embed.add_field(name=translate(user_language, 'just_dance'), value=translate(user_language, 'just_dance_description'), inline=False)
 
     activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     
