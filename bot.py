@@ -2,7 +2,7 @@ import discord
 import database
 from translations import translate
 import asyncio
-from activities import activities
+from catalog import activities
 
 intents = discord.Intents.default()
 intents.members = True
