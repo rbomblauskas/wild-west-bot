@@ -32,7 +32,7 @@ async def add_gold(sender: str, receiver: str, amount: int, reason: str, user_la
         transaction = db.transaction()
         user_doc_ref = user_ref[0].reference
 
-        @firestore_async.transactional
+        @firestore_async.async_transactional
         async def update_in_transaction(transaction, user_doc_ref):
             snapshot = await user_doc_ref.get(transaction=transaction)
             new_balance = snapshot.get("gold") + amount
@@ -70,7 +70,7 @@ async def remove_gold(sender: str, receiver: str, amount: int, reason: str, user
         transaction = db.transaction()
         user_doc_ref = user_ref[0].reference
 
-        @firestore_async.transactional
+        @firestore_async.async_transactional
         async def update_in_transaction(transaction, user_doc_ref):
             snapshot = await user_doc_ref.get(transaction=transaction)
             new_balance = snapshot.get("gold") - amount
