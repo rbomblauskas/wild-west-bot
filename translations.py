@@ -124,6 +124,13 @@ translations = {
         'just_dance_description': "Do the dance that is shown on the screen.",
         'escape_room_description': "Complete the tasks and escape from the creepy room.",
         'show_activities_description': "Shows all available activities.",
+        'invalid_key': "Invalid key or it has been already used.",
+        'registration_not_found': "You are not registered.",
+        'system': "System",
+        'key_activation': "Key activation", 
+        'successfully_redeemed': "You have successfully redeemed the key! You received {gold_amount} gold.",
+        'redeem_description': "Activates a key. Usage: `/redeem <key>`",
+        
         
     },
     'lt': {
@@ -251,7 +258,12 @@ translations = {
         'just_dance_description': "Šok pagal judesius, kurie rodomi ekrane.",
         'escape_room_description': "Įvykdyk užduotis ir pabėk iš šiurpą keliančio kambario.",
         'show_activities_description': "Parodo visas veiklas, kuriose galite dalyvauti.",
-        
+        'invalid_key': "Tokio rakto nėra arba jis jau panaudotas.",
+        'registration_not_found': "Jūs nesate užsiregistravęs.",
+        'system': "Sistema",  
+        'key_activation': "Rakto aktyvavimas", 
+        'successfully_redeemed': "Sėkmingai aktyvavai raktą! Tu gavai {gold_amount} aukso.",
+        'redeem_description': "Aktyvuoja surastą raktą. Naudojimas: `/redeem <key>`",
         
     },
 }

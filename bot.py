@@ -436,6 +436,7 @@ async def help(ctx):
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
     help_embed.add_field(name="/balance", value=translate(user_language, 'balance_command_description'), inline=False)
     help_embed.add_field(name="/show_activities", value=translate(user_language, 'show_activities_description'), inline=False)
+    help_embed.add_field(name="/redeem", value=translate(user_language, 'redeem_description'), inline=False)
 
 
     if await database.is_authorized(invoking_user_dc_username):
@@ -760,6 +761,55 @@ async def show_activities(ctx):
     activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     
     await ctx.followup.send(embed=activities_embed, ephemeral=True)
-          
-        
+    
+@bot.slash_command(guild_ids=[1288951632200990881])      
+async def redeem(ctx, key: str):
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
+
+    keys = await database.get_redeemable_keys()
+
+    if key not in keys:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'invalid_key'),
+        color=discord.Color.red()
+    )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+
+    user = ctx.author
+    user_data = await database.get_user_by_name(user.name)
+
+    if not user_data:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'registration_not_found'),
+        color=discord.Color.red()
+    )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+
+    gold_amount = keys[key]
+
+    success, message = await database.add_gold(sender=translate(user_language, 'system'), receiver=user.name, amount=gold_amount, reason=translate(user_language, 'key_activation'), user_language=user_language)
+
+    if success:
+        await database.mark_key_as_used(key, user.name)
+        success_embed = discord.Embed(
+        title=translate(user_language, 'success'),
+        description=translate(user_language, 'successfully_redeemed', gold_amount=gold_amount) ,
+        color=discord.Color.green()
+        )
+        await ctx.followup.send(embed=success_embed, ephemeral=True)
+    else:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'error'),
+        color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+    
+    
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")

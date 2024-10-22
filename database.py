@@ -6,7 +6,6 @@ import datetime
 from typing import Tuple
 from translations import translate
 
-
 # Use a service account.
 cred = credentials.Certificate('mif-renginys-firebase-adminsdk-ld2k1-dbbfebe5f1.json')
 app = firebase_admin.initialize_app(cred)
@@ -179,8 +178,32 @@ async def get_user_balance(dc_username: str, user_language: str) -> Tuple[bool, 
         print(translate(user_language, 'error'), {e})
         return (False, 0)
 
+async def redeemable_keys() -> dict:
+    return {
+        "key_1": 100,
+        "key_2": 200,
+        "key_3": 300,
+        "key_4": 400,
+        "key_5": 500,
+        "key_6": 600,
+    }
 
-    
+async def is_key_used(key: str) -> bool:
+    used_key_ref = await db.collection('used_keys').where(filter=FieldFilter('key', '==', key)).limit(1).get()
+    return len(used_key_ref) > 0
+
+async def mark_key_as_used(key: str, user: str) -> None:
+    await db.collection('used_keys').add({'key': key, 'user': user})
+
+async def get_redeemable_keys() -> dict:
+    keys = await redeemable_keys()
+    available_keys = {}
+    for key, value in keys.items():
+        if not await is_key_used(key):
+            available_keys[key] = value
+    return available_keys
+
+
     
 
 
