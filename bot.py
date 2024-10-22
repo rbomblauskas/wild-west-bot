@@ -467,6 +467,7 @@ async def get_user_transactions(ctx, dc_username: str):
         return
 
     transactions = await database.get_user_transactions(dc_username)
+    transactions = sorted(transactions, key=lambda x: x['timestamp'], reverse=True)
     transactions_per_page = 10
     total_transactions = len(transactions)
 
@@ -609,7 +610,7 @@ async def view_shop(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     
     await ctx.defer(ephemeral=True)
-    shop_items = await database.get_shop_items(ctx)
+    shop_items = await database.get_shop_items(user_language)
     translated_gold = translate(user_language, 'gold1')
     
     shop_list = "\n\n".join([f"**{item}**: {price} {translated_gold}" for item, price in shop_items.items()])
