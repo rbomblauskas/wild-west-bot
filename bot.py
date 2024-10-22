@@ -2,6 +2,7 @@ import discord
 import database
 from translations import translate
 import asyncio
+from activities import activities
 
 intents = discord.Intents.default()
 intents.members = True
@@ -151,7 +152,7 @@ async def get_user_by_name(ctx, name: str):
     await ctx.followup.send(embed=user_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-async def add_gold(ctx, name: str, amount: int, reason: str):
+async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choices=activities)):
     
     await ctx.defer(ephemeral=True)
     
