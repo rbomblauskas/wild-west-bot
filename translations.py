@@ -321,7 +321,11 @@ translations = {
         'lecturer_interview': "🗣 Dėstytojų interviu:",
         'lecturer_interview_description': "Dėstytojai duoda interviu. (102 auditorija)",
         'already_in_team': "Tu jau esi komandoje.",
-        'orienteering_team': "Orientacinio komanda"
+        'orienteering_team': "Orientacinio komanda",
+        'stops': "Stotelės",
+        'current_stop': "Dabartinė stotelė",
+        'members': "Nariai",
+        'team_data': "Komandos informacija",
                 
     },
 }
