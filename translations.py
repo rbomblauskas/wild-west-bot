@@ -148,6 +148,8 @@ translations = {
         'treasure_hunt_info': "Treasure hunt (search for QR codes and win gold)",
         'end_event': "End of the event",
         'event_program_description': "Shows event schedule.",
+        'lecturer_interview': "🗣 Lecturer interview:",
+        'lecturer_interview_description': "Lectures gives interview. (102 auditorija)",
         
         
     },
@@ -300,7 +302,9 @@ translations = {
         'treasure_hunt_info': "Lobio ieškojimas (ieškok QR kodų ir laimėk aukso)",
         'end_event': "Renginio pabaiga",
         'event_program_description': "Parodo renginio tvarkaraštį.",
-        
+        'lecturer_interview': "🗣 Dėstytojų interviu:",
+        'lecturer_interview_description': "Dėstytojai duoda interviu. (102 auditorija)",
+                
     },
 }
 

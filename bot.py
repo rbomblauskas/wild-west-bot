@@ -765,7 +765,8 @@ async def show_activities(ctx):
     activities_embed.add_field(name=translate(user_language, 'poker'), value=translate(user_language, 'poker_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'blackjack'), value=translate(user_language, 'blackjack_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'just_dance'), value=translate(user_language, 'just_dance_description'), inline=False)
-
+    activities_embed.add_field(name=translate(user_language, 'lecturer_interview'), value=translate(user_language, 'lecturer_interview_description'), inline=False)
+    
     activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     
     await ctx.followup.send(embed=activities_embed, ephemeral=True)
