@@ -311,12 +311,12 @@ async def add_to_team(dc_username, name, user_language):
     
 async def remove_from_team(dc_username, name, user_language):
     try:
-        user_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).limit(1).get()
-        if not user_ref:
+        team_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).limit(1).get()
+        if not team_ref:
             return (False, translate(user_language, 'no_such_team'))
 
         transaction = db.transaction()
-        user_doc_ref = user_ref[0].reference
+        user_doc_ref = team_ref[0].reference
 
         @firestore_async.async_transactional
         async def update_in_transaction(transaction, user_doc_ref):
@@ -336,7 +336,43 @@ async def remove_from_team(dc_username, name, user_language):
         return (True, message)
     except Exception as e:
         return (False, str(e))
+
+async def add_gold_to_team(sender: str, team_name: str, amount: int, reason: str, user_language: str) -> Tuple[bool, str]:
+    try:
+        if amount <= 0:
+            return (False, translate(user_language, 'invalid_amount'))
+        user_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', team_name)).limit(1).get()
+        if not user_ref:
+            return (False, translate(user_language, 'no_such_user', name=team_name))
+
+        transaction = db.transaction()
+        user_doc_ref = user_ref[0].reference
+
+        @firestore_async.async_transactional
+        async def update_in_transaction(transaction, user_doc_ref):
+            snapshot = await user_doc_ref.get(transaction=transaction)
+            new_balance = snapshot.get("gold") + amount
+            transaction.update(user_doc_ref, {"gold": new_balance})
+            return (True, new_balance)
+
+
+        ok, new_balance = await update_in_transaction(transaction, user_doc_ref)
+        
+        if not ok:
+            return (False, new_balance)
+        
+        return (True, new_balance)
+    except Exception as e:
+        return (False, str(e))
     
+async def complete_orienteering_stop(team_name: str, stop:str, user_language: str) -> Tuple[bool, str]:        
+    team_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', team_name)).limit(1).get()
+    if not team_ref:
+        return (False, translate(user_language, 'no_such_team'))
+    
+    team_doc_ref = team_ref[0].reference
+    await team_doc_ref.update({stop: True})
+    return (True, 'success')
     
 
 

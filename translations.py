@@ -75,6 +75,7 @@ translations = {
         'balance_command_description': "Shows how much gold you have.",
         'available_activities': "🤠 Available activities 🤠",
         'here_are_activities': "All activities that you can participate in:",
+        'photo_wall': "📷 Photo wall:",
         'monster': "🧌 Monster:",
         'horseshoe_throw': "🧲 Horseshoe throw:",
         'cactus': "🌵 Cactus:",
@@ -150,7 +151,11 @@ translations = {
         'lecturer_interview': "🗣 Lecturer interview:",
         'lecturer_interview_description': "Lectures gives interview. (102 auditorija)",
         'already_in_team': "You are already in a team.",
-        'orienteering_team': "Orienteering team"
+        'orienteering_team': "Orienteering team",
+        'stops': "Stops",
+        'current_stop': "Current stop",
+        'members': "Members",
+        'team_data': "Team data",
         
         
     },
@@ -230,6 +235,7 @@ translations = {
         'balance_command_description': "Parodo kiek turite aukso.",
         'available_activities': "🤠 Visos veiklos 🤠",
         'here_are_activities': "Visos veiklos kuriose galite dalyvauti:",
+        'photo_wall': "📷 Fotosienelė",
         'monster': "🧌 Pabaisa:",
         'horseshoe_throw': "🧲 Pasagos metimas:",
         'cactus': "🌵 Kaktusas:",
@@ -305,7 +311,11 @@ translations = {
         'lecturer_interview': "🗣 Dėstytojų interviu:",
         'lecturer_interview_description': "Dėstytojai duoda interviu. (102 auditorija)",
         'already_in_team': "Tu jau esi komandoje.",
-        'orienteering_team': "Orientacinio komanda"
+        'orienteering_team': "Orientacinio komanda",
+        'stops': "Stotelės",
+        'current_stop': "Dabartinė stotelė",
+        'members': "Nariai",
+        'team_data': "Komandos informacija",
                 
     },
 }
