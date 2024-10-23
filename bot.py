@@ -440,6 +440,7 @@ async def help(ctx):
     # NON-ADMIN
     help_embed.add_field(name="/hello", value="Says hi.", inline=False)
     help_embed.add_field(name="/event", value=translate(user_language, 'event_description'))
+    help_embed.add_field(name="/event_program", value=translate(user_language, 'event_program_description'), inline=False)
     help_embed.add_field(name="/get_user_by_name", value=translate(user_language, 'get_user_by_name_description'), inline=False)
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
     help_embed.add_field(name="/balance", value=translate(user_language, 'balance_command_description'), inline=False)
@@ -752,7 +753,6 @@ async def show_activities(ctx):
     activities_embed.add_field(name=translate(user_language, 'gold_searching'), value=translate(user_language, 'gold_searching_description'), inline=False)
     activities_embed.add_field(name=translate(user_language, 'horse_tail'), value=translate(user_language, 'horse_tail_description'))
     activities_embed.add_field(name=translate(user_language, 'dancing'), value=translate(user_language, 'dancing_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'charades'), value=translate(user_language, 'charades_description'), inline=False)
     
     activities_embed.add_field(name=translate(user_language, 'additional_activities'), value="",inline=False)
     
@@ -818,6 +818,42 @@ async def redeem(ctx, key: str):
         color=discord.Color.red()
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
+        
+@bot.slash_command(guild_ids=[1288951632200990881])            
+async def event_program(ctx):
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
+    
+    embed = discord.Embed(
+        title=translate(user_language, 'event_program'),
+        description=translate(user_language, 'schedule'),
+        color=discord.Color.gold()
+    )
+    
+    embed.add_field(name="🕒 19:00 - 20:00", value=translate(user_language, 'registration'), inline=False)
+    embed.add_field(name="🕒 20:00 - 22:00", value=translate(user_language, 'orienteering'), inline=False)
+    embed.add_field(name="🕒 22:00 - 22:15", value=translate(user_language, 'orienteering_winners'), inline=False)
+    embed.add_field(name="🕒 22:00 - 22:30", value=translate(user_language, 'after_orienteering'), inline=False)
+    embed.add_field(name="🕒 22:00 - 24:00", value=translate(user_language, 'bull_activity'), inline=False)
+    embed.add_field(name="🕒 21:00 - 1:00", value=translate(user_language, 'gold_shop_info'), inline=False)
+    embed.add_field(name="🕒 22:00 - 23:00", value=translate(user_language, 'escape_room_info'), inline=False)
+    embed.add_field(name="🕒 22:00 - 23:00", value=translate(user_language, 'sack_jumping_info'), inline=False)
+    embed.add_field(name="🕒 22:30 - 23:00", value=translate(user_language, 'trivia_info'), inline=False)
+    embed.add_field(name="🕒 23:00 - 00:30", value=translate(user_language, 'lecturer'), inline=False)
+    embed.add_field(name="🕒 23:00 - 1:00", value=translate(user_language, 'blackjack_info'), inline=False)
+    embed.add_field(name="🕒 23:00 - 1:00", value=translate(user_language, 'poker_info'), inline=False)
+    embed.add_field(name="🕒 23:00 - 24:00", value=translate(user_language, 'just_dance_info'), inline=False)
+    embed.add_field(name="🕒 24:00 - 1:30", value=translate(user_language, 'film_info'), inline=False)
+    embed.add_field(name="🕒 24:00 - 1:30", value=translate(user_language, 'karaoke_info'), inline=False)
+    embed.add_field(name="🕒 19:00 - 1:30", value=translate(user_language, 'treasure_hunt_info'), inline=False)
+    embed.add_field(name="🕒 1:30", value=translate(user_language, 'end_event'), inline=False)
+    
+
+    embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+    
+    await ctx.followup.send(embed=embed, ephemeral=True)
+
     
     
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
