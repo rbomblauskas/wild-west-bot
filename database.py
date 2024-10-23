@@ -5,6 +5,7 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 import datetime
 from typing import Tuple
 from translations import translate
+from catalog import orienteering_stops
 
 # Use a service account.
 cred = credentials.Certificate('mif-renginys-firebase-adminsdk-ld2k1-dbbfebe5f1.json')
@@ -103,6 +104,8 @@ async def is_user_registered(dc_username: str) -> bool:
     return len(user_ref) > 0
 
 async def register_user(name: str, dc_username: str, language: str) -> Tuple[bool, str]:
+    if await is_user_registered:
+        return (False, '')
 
     doc_ref = db.collection("users").document()
     timestamp = datetime.datetime.now()
@@ -206,9 +209,13 @@ async def create_orienteering_team(leader, name):
     doc_ref = db.collection("teams").document()
     data = {
         "name": name,
+        "gold": 0,
         "invites": "",
-        "usernames": leader
+        "usernames": leader,
+        "current_stop": "" 
     }
+    for stop in orienteering_stops:
+        data[stop] = False
     await doc_ref.set(data)
     
     return (True, 'success')
@@ -225,8 +232,8 @@ async def assign_team(dc_username, name, user_language):
 
         @firestore_async.async_transactional
         async def update_in_transaction(transaction, user_doc_ref):
-            snapshot = await user_doc_ref.get(transaction=transaction)
-            team = snapshot.get("team")
+            #snapshot = await user_doc_ref.get(transaction=transaction)
+            #team = snapshot.get("team")
             transaction.update(user_doc_ref, {"team": name})
             return (True, "")
 

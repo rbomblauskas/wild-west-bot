@@ -149,7 +149,8 @@ translations = {
         'event_program_description': "Shows event schedule.",
         'lecturer_interview': "🗣 Lecturer interview:",
         'lecturer_interview_description': "Lectures gives interview. (102 auditorija)",
-        'already_in_team': "You are already in a team."
+        'already_in_team': "You are already in a team.",
+        'orienteering_team': "Orienteering team"
         
         
     },
@@ -303,7 +304,8 @@ translations = {
         'event_program_description': "Parodo renginio tvarkaraštį.",
         'lecturer_interview': "🗣 Dėstytojų interviu:",
         'lecturer_interview_description': "Dėstytojai duoda interviu. (102 auditorija)",
-        'already_in_team': "Tu jau esi komandoje."
+        'already_in_team': "Tu jau esi komandoje.",
+        'orienteering_team': "Orientacinio komanda"
                 
     },
 }
