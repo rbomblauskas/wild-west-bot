@@ -130,7 +130,6 @@ translations = {
         'redeem_description': "Activates a key. Usage: `/redeem <key>`",
         'event_program': "📅 **Event program**",
         'schedule': "Schedule for today's event:",
-        'registration': "Registration.",
         'orienteering': "Orienteering (all main activities in teams use `/show_activities`).",
         'orienteering_winners': "Orienteering race winners (main lobby).",
         'after_orienteering': "Orienteering activities but now not in teams.",
@@ -150,6 +149,7 @@ translations = {
         'event_program_description': "Shows event schedule.",
         'lecturer_interview': "🗣 Lecturer interview:",
         'lecturer_interview_description': "Lectures gives interview. (102 auditorija)",
+        'already_in_team': "You are already in a team."
         
         
     },
@@ -284,7 +284,6 @@ translations = {
         'redeem_description': "Aktyvuoja surastą raktą. Naudojimas: `/redeem <key>`",
         'event_program': "📅 **Renginio programa**",
         'schedule': "Renginio tvarkaraštis:",
-        'registration': "Registracija.",
         'orienteering': "Orientacinės (Visos pagrindinės veiklos komandose. Naudok: `/show_activities`).",
         'orienteering_winners': "Orientacinių varžybų laimėtojai (pagrindinė patalpa).",
         'after_orienteering': "Orientacinių veiklos po vieną.",
@@ -304,6 +303,7 @@ translations = {
         'event_program_description': "Parodo renginio tvarkaraštį.",
         'lecturer_interview': "🗣 Dėstytojų interviu:",
         'lecturer_interview_description': "Dėstytojai duoda interviu. (102 auditorija)",
+        'already_in_team': "Tu jau esi komandoje."
                 
     },
 }

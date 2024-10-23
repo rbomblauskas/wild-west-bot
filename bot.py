@@ -453,7 +453,7 @@ async def help(ctx):
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
     help_embed.add_field(name="/balance", value=translate(user_language, 'balance_command_description'), inline=False)
     help_embed.add_field(name="/show_activities", value=translate(user_language, 'show_activities_description'), inline=False)
-    help_embed.add_field(name="/redeem", value=translate(user_language, 'redeem_description'), inline=False)
+    #help_embed.add_field(name="/redeem", value=translate(user_language, 'redeem_description'), inline=False)
 
 
     if await database.is_authorized(invoking_user_dc_username):
@@ -786,7 +786,7 @@ async def show_activities(ctx):
     
     await ctx.followup.send(embed=activities_embed, ephemeral=True)
     
-@bot.slash_command(guild_ids=[1288951632200990881])      
+'''@bot.slash_command(guild_ids=[1288951632200990881])      
 @commands.cooldown(1, 2, commands.BucketType.user)
 async def redeem(ctx, key: str):
     user_language = await database.get_user_language(ctx.author.name)
@@ -834,7 +834,7 @@ async def redeem(ctx, key: str):
         description=translate(user_language, 'error'),
         color=discord.Color.red()
         )
-        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        await ctx.followup.send(embed=error_embed, ephemeral=True)'''
         
 @bot.slash_command(guild_ids=[1288951632200990881])          
 @commands.cooldown(1, 2, commands.BucketType.user)  
@@ -871,8 +871,197 @@ async def event_program(ctx):
     embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     
     await ctx.followup.send(embed=embed, ephemeral=True)
+    
+    
+@bot.slash_command(guild_ids=[1288951632200990881])      
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def create_orienteering_team(ctx, name: str):
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
 
-@bot.event
+    user = ctx.author
+    user_data = await database.get_user_by_name(user.name)
+
+    if not user_data:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'registration_not_found'),
+        color=discord.Color.red()
+    )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    if user_data['team']:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'already_in_team'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    ok, message = await database.create_orienteering_team(user.name, name)
+    if not ok:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=message,
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    await database.assign_team(user.name, name, user_language)
+    
+    await ctx.followup.send("Success", ephemeral=True)
+    
+    
+@bot.slash_command(guild_ids=[1288951632200990881])      
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def join_orienteering_team(ctx, name: str):
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
+
+    user = ctx.author
+    user_data = await database.get_user_by_name(user.name)
+
+    if not user_data:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'registration_not_found'),
+        color=discord.Color.red()
+    )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    if user_data['team']:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'already_in_team'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    team = await database.get_team_by_name(name)
+    if not team:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description='wef',
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    invites = team['invites'].split(' ')
+    if user.name not in invites:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description='few',
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    usernames = team['usernames'].split(' ')
+    if len(usernames) > 6:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description='too much > 6',
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    await database.assign_team(user.name, name, user_language)
+    await database.add_to_team(user.name, name, user_language)
+    
+    await ctx.followup.send("Success", ephemeral=True)
+    
+    
+@bot.slash_command(guild_ids=[1288951632200990881])      
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def leave_orienteering_team(ctx):
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
+
+    user = ctx.author
+    user_data = await database.get_user_by_name(user.name)
+
+    if not user_data:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'registration_not_found'),
+        color=discord.Color.red()
+    )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    if not user_data['team']:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'not_in_team'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    
+    await database.assign_team(user.name, "", user_language)
+    await database.remove_from_team(user.name, user_data['team'], user_language)
+    
+    
+    
+    await ctx.followup.send("Success", ephemeral=True)
+    
+@bot.slash_command(guild_ids=[1288951632200990881])      
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def invite_to_orienteering_team(ctx, dc_username: str):
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    await ctx.defer(ephemeral=True)
+
+    user = ctx.author
+    user_data = await database.get_user_by_name(user.name)
+
+    if not user_data:
+        error_embed = discord.Embed(
+        title=translate(user_language, 'error'),
+        description=translate(user_language, 'registration_not_found'),
+        color=discord.Color.red()
+    )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    if not user_data['team']:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'not_in_team'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    if user.name == dc_username:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'cant_invite_yourself'),
+            color=discord.Color.red()
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    ok, message = await database.invite_to_team(dc_username, user_data['team'], user_language)
+    if not ok:
+        await ctx.followup.send(message, ephemeral=True)
+        return
+    
+    await ctx.followup.send("Success", ephemeral=True)
+    
+
+    
+
+'''@bot.event
 async def on_application_command_error(ctx, error):
     await ctx.defer(ephemeral=True)
     desc = ""
@@ -889,7 +1078,7 @@ async def on_application_command_error(ctx, error):
         description=desc,
         color=discord.Color.red()
     )
-    await ctx.followup.send(embed=embed, ephemeral=True)
+    await ctx.followup.send(embed=embed, ephemeral=True)'''
 
     
     

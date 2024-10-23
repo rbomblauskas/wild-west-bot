@@ -111,7 +111,8 @@ async def register_user(name: str, dc_username: str, language: str) -> Tuple[boo
         "gold": 0,
         "language": language,
         "name": name,
-        "registration_date": timestamp
+        "registration_date": timestamp,
+        "team": ""
     }
     await doc_ref.set(data)
     
@@ -179,14 +180,7 @@ async def get_user_balance(dc_username: str, user_language: str) -> Tuple[bool, 
         return (False, 0)
 
 async def redeemable_keys() -> dict:
-    return {
-        "key_1": 100,
-        "key_2": 200,
-        "key_3": 300,
-        "key_4": 400,
-        "key_5": 500,
-        "key_6": 600,
-    }
+    return {'kruopu-svajoniu-sultinys': 100, 'menulio-dulkes-pica': 100, 'sauletos-dienos-salotos': 100, 'paslaptingas-misko-troskinys': 100, 'vejo-puku-ravioli': 100, 'vasaros-svelnumo-desertine': 100, 'juros-bangu-kebabas': 100, 'tamsos-grotu-uogiene': 100, 'erdves-balanso-patiekalas': 100, 'nakties-svytejimo-pudingas': 100}
 
 async def is_key_used(key: str) -> bool:
     used_key_ref = await db.collection('used_keys').where(filter=FieldFilter('key', '==', key)).limit(1).get()
@@ -202,6 +196,141 @@ async def get_redeemable_keys() -> dict:
         if not await is_key_used(key):
             available_keys[key] = value
     return available_keys
+
+
+async def create_orienteering_team(leader, name):
+    team_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).get()
+    if len(team_ref) > 0:
+        return (False, 'team_exists')
+    
+    doc_ref = db.collection("teams").document()
+    data = {
+        "name": name,
+        "invites": "",
+        "usernames": leader
+    }
+    await doc_ref.set(data)
+    
+    return (True, 'success')
+
+
+async def assign_team(dc_username, name, user_language):
+    try:
+        user_ref = await db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
+        if not user_ref:
+            return (False, translate(user_language, 'no_such_user', name=dc_username))
+
+        transaction = db.transaction()
+        user_doc_ref = user_ref[0].reference
+
+        @firestore_async.async_transactional
+        async def update_in_transaction(transaction, user_doc_ref):
+            snapshot = await user_doc_ref.get(transaction=transaction)
+            team = snapshot.get("team")
+            transaction.update(user_doc_ref, {"team": name})
+            return (True, "")
+
+        ok, message = await update_in_transaction(transaction, user_doc_ref)
+        
+        if not ok:
+            return (False, message)
+        
+        return (True, message)
+    except Exception as e:
+        return (False, str(e))
+    
+async def get_team_by_name(name: str):
+    user_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).limit(1).get()
+    if not user_ref:
+        return None
+    user_doc = user_ref[0]
+    user_data = user_doc.to_dict()
+    return user_data
+
+async def invite_to_team(dc_username, name, user_language):
+    try:
+        user_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).limit(1).get()
+        if not user_ref:
+            return (False, translate(user_language, 'no_such_team'))
+
+        transaction = db.transaction()
+        user_doc_ref = user_ref[0].reference
+
+        @firestore_async.async_transactional
+        async def update_in_transaction(transaction, user_doc_ref):
+            snapshot = await user_doc_ref.get(transaction=transaction)
+            invites = snapshot.get("invites")
+            invites = invites.split(' ')
+            invites.append(dc_username)
+            transaction.update(user_doc_ref, {"invites": ' '.join(invites)})
+            return (True, "")
+
+        ok, message = await update_in_transaction(transaction, user_doc_ref)
+        
+        if not ok:
+            return (False, message)
+        
+        return (True, message)
+    except Exception as e:
+        return (False, str(e))
+    
+    
+async def add_to_team(dc_username, name, user_language):
+    try:
+        user_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).limit(1).get()
+        if not user_ref:
+            return (False, translate(user_language, 'no_such_team'))
+
+        transaction = db.transaction()
+        user_doc_ref = user_ref[0].reference
+
+        @firestore_async.async_transactional
+        async def update_in_transaction(transaction, user_doc_ref):
+            snapshot = await user_doc_ref.get(transaction=transaction)
+            usernames = snapshot.get("usernames")
+            usernames = usernames.split(' ')
+            usernames.append(dc_username)
+            transaction.update(user_doc_ref, {"usernames": ' '.join(usernames)})
+            return (True, "")
+
+        ok, message = await update_in_transaction(transaction, user_doc_ref)
+        
+        if not ok:
+            return (False, message)
+        
+        return (True, message)
+    except Exception as e:
+        return (False, str(e))
+    
+async def remove_from_team(dc_username, name, user_language):
+    try:
+        user_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', name)).limit(1).get()
+        if not user_ref:
+            return (False, translate(user_language, 'no_such_team'))
+
+        transaction = db.transaction()
+        user_doc_ref = user_ref[0].reference
+
+        @firestore_async.async_transactional
+        async def update_in_transaction(transaction, user_doc_ref):
+            snapshot = await user_doc_ref.get(transaction=transaction)
+            usernames = snapshot.get("usernames")
+            usernames = set(usernames.split(' '))
+            usernames.remove(dc_username)
+            usernames = list(usernames)
+            transaction.update(user_doc_ref, {"usernames": ' '.join(usernames)})
+            return (True, "")
+
+        ok, message = await update_in_transaction(transaction, user_doc_ref)
+        
+        if not ok:
+            return (False, message)
+        
+        return (True, message)
+    except Exception as e:
+        return (False, str(e))
+    
+    
 
 
     
