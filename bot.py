@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 import database
 from translations import translate
 import asyncio
@@ -129,10 +130,12 @@ class NameInputModal(discord.ui.Modal):
         await general_channel.send(embed=welcome_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def hello(ctx):
     await ctx.respond('hi', ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def get_user_by_name(ctx, name: str):
     
     await ctx.defer(ephemeral=True)
@@ -160,6 +163,7 @@ async def get_user_by_name(ctx, name: str):
     await ctx.followup.send(embed=user_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choices=activities)):
     
     await ctx.defer(ephemeral=True)
@@ -194,6 +198,7 @@ async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choi
     await ctx.followup.send(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def remove_gold(ctx, name: str, amount: int, reason: str):
     
     await ctx.defer(ephemeral=True)
@@ -228,6 +233,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
     await ctx.followup.send(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def register_user(ctx, name: str, dc_username: str, language: str):
     
     await ctx.defer(ephemeral=True)
@@ -339,6 +345,7 @@ async def close_welcome_channel_and_redirect(member: discord.Member, language: s
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def list_users(ctx):
     
     await ctx.defer(ephemeral=True)
@@ -424,6 +431,7 @@ async def list_users(ctx):
     await message.edit(view=view)
 
 @bot.slash_command(guild_ids=[1288951632200990881])    
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def help(ctx):
     
     await ctx.defer(ephemeral=True)
@@ -462,6 +470,7 @@ async def help(ctx):
     await ctx.followup.send(embed=help_embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def get_user_transactions(ctx, dc_username: str):
     await ctx.defer(ephemeral=True)
 
@@ -549,6 +558,7 @@ async def get_user_transactions(ctx, dc_username: str):
     await message.edit(view=view) 
 
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def event(ctx):
     await ctx.defer(ephemeral=True)
     
@@ -572,6 +582,7 @@ async def event(ctx):
     await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def add_moderator(ctx, member: discord.Member):
     await ctx.defer(ephemeral=True)
     invoking_user_dc_username = ctx.author.name
@@ -616,6 +627,7 @@ async def add_moderator(ctx, member: discord.Member):
       
     
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def view_shop(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -636,6 +648,7 @@ async def view_shop(ctx):
     await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def buy_item(ctx, member: discord.Member, item: str):
     user_language = await database.get_user_language(ctx.author.name)
     await ctx.defer(ephemeral=True)
@@ -702,7 +715,8 @@ async def buy_item(ctx, member: discord.Member, item: str):
         
         await ctx.followup.send(embed=embed, ephemeral=True)
         
-@bot.slash_command(guild_ids=[1288951632200990881])        
+@bot.slash_command(guild_ids=[1288951632200990881])     
+@commands.cooldown(1, 2, commands.BucketType.user)   
 async def balance(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     await ctx.defer(ephemeral=True) 
@@ -726,6 +740,7 @@ async def balance(ctx):
     await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])    
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def show_activities(ctx):
     
     await ctx.defer(ephemeral=True)
@@ -772,6 +787,7 @@ async def show_activities(ctx):
     await ctx.followup.send(embed=activities_embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
+@commands.cooldown(1, 2, commands.BucketType.user)
 async def redeem(ctx, key: str):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -820,7 +836,8 @@ async def redeem(ctx, key: str):
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
         
-@bot.slash_command(guild_ids=[1288951632200990881])            
+@bot.slash_command(guild_ids=[1288951632200990881])          
+@commands.cooldown(1, 2, commands.BucketType.user)  
 async def event_program(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -853,6 +870,25 @@ async def event_program(ctx):
 
     embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     
+    await ctx.followup.send(embed=embed, ephemeral=True)
+
+@bot.event
+async def on_application_command_error(ctx, error):
+    await ctx.defer(ephemeral=True)
+    desc = ""
+    if isinstance(error, commands.CommandOnCooldown):
+        desc = f"You're on cooldown! Try again in {round(error.retry_after, 1)} seconds."
+    elif isinstance(error, commands.MissingRequiredArgument):
+        desc = "You missed a required argument!"
+    elif isinstance(error, commands.CommandNotFound):
+        desc = "Command not found!"
+    else:
+        desc = "Bruh"
+    embed = discord.Embed(
+        title='Error',
+        description=desc,
+        color=discord.Color.red()
+    )
     await ctx.followup.send(embed=embed, ephemeral=True)
 
     
