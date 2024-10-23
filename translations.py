@@ -144,13 +144,23 @@ translations = {
         'just_dance_info': "Just dance (in the space with beanbags).",
         'film_info': "Film (in 103 audience).",
         'karaoke_info': "Karaoke (in the space with beanbags).",
-        'treasure_hunt_info': "Treasure hunt (search for QR codes and win gold)",
+        'treasure_hunt_info': "Treasure hunt (find all QR codes with keys and go to the shop and show them)",
         'end_event': "End of the event",
         'event_program_description': "Shows event schedule.",
         'lecturer_interview': "🗣 Lecturer interview:",
         'lecturer_interview_description': "Lectures gives interview. (102 auditorija)",
         'already_in_team': "You are already in a team.",
-        'orienteering_team': "Orienteering team"
+        'orienteering_team': "Orienteering team",
+        'sheriff_adventure_kit': "Sheriff adventure kit",
+        'desert_wanderer': "Desert wanderer",
+        'sand_protection': "Sand protection",
+        'lonely_cowboy': "Lonely cowboy",
+        'wild_west_outfit': "Wild west outfit",
+        'traveler_bag': "Traveler bag",
+        'sheriff_shirt_and_gear': "Sheriff shirt and gear",
+        'hint_qr_codes': "Hint for 2 QR codes",
+        'karaoke_song_request': "Karaoke song request",
+        'just_dance_song_request': "Just dance song request",
         
         
     },
@@ -299,15 +309,25 @@ translations = {
         'just_dance_info': "Just dance (erdvėje su sėdmaišiais).",
         'film_info': "Filmas (103 auditorija).",
         'karaoke_info': "Karaoke (erdvėje su sėdmaišiais).",
-        'treasure_hunt_info': "Lobio ieškojimas (ieškok QR kodų ir laimėk aukso)",
+        'treasure_hunt_info': "Lobio ieškojimas (ieškok QR kodų, kuriuose yra raktai, juos suradęs nueik į parduotuvę ir gauk aukso)",
         'end_event': "Renginio pabaiga",
         'event_program_description': "Parodo renginio tvarkaraštį.",
         'lecturer_interview': "🗣 Dėstytojų interviu:",
         'lecturer_interview_description': "Dėstytojai duoda interviu. (102 auditorija)",
         'already_in_team': "Tu jau esi komandoje.",
-        'orienteering_team': "Orientacinio komanda"
+        'orienteering_team': "Orientacinio komanda",
+        'sheriff_adventure_kit': "Šerifo nuotykių rinkinys",
+        'desert_wanderer': "Dykumos klajūnas",
+        'sand_protection': "Apsauga nuo smėlio",
+        'lonely_cowboy': "Vienišas kaubojus",
+        'wild_west_outfit': "Laukinių vakarų apranga",
+        'traveler_bag': "Keliautojo krepšys",
+        'sheriff_shirt_and_gear': "Šerifo marškiniai ir įrankiai",
+        'hint_qr_codes': "Užuomina 2 QR kodams",
+        'karaoke_song_request': "Karaoke dainos užsakymas",
+        'just_dance_song_request': "Just dance dainos užsakymas",
+    }
                 
-    },
 }
 
 def translate(language: str, key: str, **kwargs) -> str:

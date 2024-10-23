@@ -166,9 +166,16 @@ async def buy_item(sender: str, receiver: str, item_price: int, item_name: str, 
 async def get_shop_items(language: str) -> dict:
     return {
         
-        translate(language, 'MIDI t-shirt'): 100,
-        translate(language, 'Lemon Gym Subscription'): 200,
-        translate(language, 'Random'): 300,
+        translate(language, 'sheriff_adventure_kit'): 250,
+        translate(language, 'desert_wanderer'): 450,
+        translate(language, 'sand_protection'): 500,
+        translate(language, 'lonely_cowboy'): 650,
+        translate(language, 'wild_west_outfit'): 700,
+        translate(language, 'traveler_bag'): 180,
+        translate(language, 'sheriff_shirt_and_gear'): 850,
+        translate(language, 'hint_qr_codes'): 30,
+        translate(language, 'karaoke_song_request'): 100,
+        translate(language, 'just_dance_song_request'): 100,
     }
     
 async def get_user_balance(dc_username: str, user_language: str) -> Tuple[bool, int]:
