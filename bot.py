@@ -22,9 +22,11 @@ async def on_member_join(member):
     welcome_message_en = translate('en', 'welcome_message', dc_username=member.mention)
     welcome_message_lt = translate('lt', 'welcome_message', dc_username=member.mention)
     
-    embed = discord.Embed(title="Welcome! // Sveiki!", color=discord.Color.blue())
+    embed = discord.Embed(title="Welcome! // Sveiki!", color=discord.Color.gold())
     embed.add_field(name="English", value=welcome_message_en, inline=False)
     embed.add_field(name="Lietuvių", value=welcome_message_lt, inline=False)
+    embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+    embed.set_footer(text="If you are having problems registering contact the admins or moderators")
     
     await channel.send(embed=embed)
     
@@ -33,10 +35,16 @@ async def on_member_join(member):
     lithuanian_button = discord.ui.Button(label='Lietuvių', style=discord.ButtonStyle.primary)
 
     async def english_callback(interaction: discord.Interaction):
+        if interaction.user != member:
+            await interaction.response.send_message("**This button is not for you!**", ephemeral=True)
+            return
         modal = NameInputModal(language='en', member=member)
         await interaction.response.send_modal(modal)
 
     async def lithuanian_callback(interaction: discord.Interaction):
+        if interaction.user != member:
+            await interaction.response.send_message("**Šis mygtukas skirtas ne tau!**", ephemeral=True)
+            return
         modal = NameInputModal(language='lt', member=member)
         await interaction.response.send_modal(modal)
 
