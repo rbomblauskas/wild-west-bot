@@ -837,7 +837,7 @@ async def event_program(ctx):
     embed.add_field(name="🕒 22:00 - 22:30", value=translate(user_language, 'after_orienteering'), inline=False)
     embed.add_field(name="🕒 22:00 - 24:00", value=translate(user_language, 'bull_activity'), inline=False)
     embed.add_field(name="🕒 21:00 - 1:00", value=translate(user_language, 'gold_shop_info'), inline=False)
-    embed.add_field(name="🕒 22:00 - 23:00", value=translate(user_language, 'escape_room_info'), inline=False)
+    embed.add_field(name="🕒 22:00 - 1:30", value=translate(user_language, 'escape_room_info'), inline=False)
     embed.add_field(name="🕒 22:00 - 23:00", value=translate(user_language, 'sack_jumping_info'), inline=False)
     embed.add_field(name="🕒 22:30 - 23:00", value=translate(user_language, 'trivia_info'), inline=False)
     embed.add_field(name="🕒 23:00 - 00:30", value=translate(user_language, 'lecturer'), inline=False)
