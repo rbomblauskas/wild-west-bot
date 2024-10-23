@@ -70,6 +70,7 @@ class NameInputModal(discord.ui.Modal):
         ))
 
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True) 
         name = self.children[0].value
 
         if await database.is_user_registered(self.member.name):
@@ -78,7 +79,7 @@ class NameInputModal(discord.ui.Modal):
             description=translate(self.language, 'already_registered'),
             color=discord.Color.red() 
         )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, ephemeral=True)
             await self.assign_role()
             return
 
@@ -90,7 +91,7 @@ class NameInputModal(discord.ui.Modal):
             description=translate(self.language, 'registration_success', name=name, dc_username=self.member.name),
             color=discord.Color.green()
         )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, ephemeral=True)
             await self.assign_role()
             await self.close_welcome_channel_and_redirect()    
         else:
@@ -99,7 +100,7 @@ class NameInputModal(discord.ui.Modal):
             description=translate(self.language, 'registration_error'),
             color=discord.Color.red()
         )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, ephemeral=True)
             
     async def assign_role(self):
         if self.language == 'en':
