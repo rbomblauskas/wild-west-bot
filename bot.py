@@ -915,7 +915,12 @@ async def create_orienteering_team(ctx, team_name: str):
         return
     await database.assign_team(user.name, team_name, user_language)
     
-    await ctx.followup.send("Success", ephemeral=True)
+        
+    embed = discord.Embed(
+            title=translate(user_language, "created_team_successfully"),
+            color=discord.Colour.green(),
+    )
+    await ctx.followup.send(embed=embed, ephemeral=True)
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
@@ -969,7 +974,7 @@ async def join_orienteering_team(ctx, team_name: str):
     if len(usernames) > 6:
         error_embed = discord.Embed(
             title=translate(user_language, 'error'),
-            description='too much > 6',
+            description=translate(user_language, 'team_limit_reached'),
             color=discord.Color.red()
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
@@ -978,7 +983,11 @@ async def join_orienteering_team(ctx, team_name: str):
     await database.assign_team(user.name, team_name, user_language)
     await database.add_to_team(user.name, team_name, user_language)
     
-    await ctx.followup.send("Success", ephemeral=True)
+    embed = discord.Embed(
+            title=translate(user_language, "joined_team_successfully"),
+            color=discord.Colour.green(),
+    )
+    await ctx.followup.send(embed=embed, ephemeral=True)
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
@@ -1014,8 +1023,11 @@ async def leave_orienteering_team(ctx):
     await database.remove_from_team(user.name, user_data['team'], user_language)
     
     
-    
-    await ctx.followup.send("Success", ephemeral=True)
+    embed = discord.Embed(
+            title=translate(user_language, "left_team_successfully"),
+            color=discord.Colour.green(),
+    )
+    await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
 #@commands.cooldown(1, 2, commands.BucketType.user)
@@ -1059,7 +1071,11 @@ async def invite_to_orienteering_team(ctx, dc_username: str):
         await ctx.followup.send(message, ephemeral=True)
         return
     
-    await ctx.followup.send("Success", ephemeral=True)
+    embed = discord.Embed(
+            title=translate(user_language, "invited_successfully"),
+            color=discord.Colour.green(),
+    )
+    await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
 #@commands.cooldown(1, 2, commands.BucketType.user)
@@ -1086,7 +1102,7 @@ async def get_team_by_name(ctx, team_name: str):
     team_embed.add_field(name=translate(user_language, 'name'), value=team_data['name'], inline=False)
     team_embed.add_field(name=translate(user_language, 'gold'), value=team_data['gold'], inline=False)
     team_embed.add_field(name=translate(user_language, 'members'), value=team_data['usernames'], inline=False)
-    team_embed.add_field(name=translate(user_language, 'current_stop'), value=team_data['current_stop'], inline=False)
+    team_embed.add_field(name=translate(user_language, 'current_stop'), value=translate(user_language, team_data['current_stop']), inline=False)
     stops = ''
     for stop in orienteering_stops:
         stops += f'{translate(user_language, stop)} {'✅' if team_data[stop] else '❌'}\n'

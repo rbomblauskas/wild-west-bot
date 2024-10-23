@@ -153,7 +153,7 @@ translations = {
         'already_in_team': "You are already in a team.",
         'orienteering_team': "Orienteering team",
         'stops': "Stops",
-        'current_stop': "Current stop",
+        'current_stop': "Next stop",
         'members': "Members",
         'team_data': "Team data",
         'sheriff_adventure_kit': "Sheriff adventure kit",
@@ -166,6 +166,17 @@ translations = {
         'hint_qr_codes': "Hint for 2 QR codes",
         'karaoke_song_request': "Karaoke song request",
         'just_dance_song_request': "Just dance song request",
+        'not_in_team': "You are not in a team.",
+        'not_invited': "You are not invited to this team.",
+        'team_limit_reached' : "Team limit reached. Maximum of 6 members are allowed.",
+        'joined_team_succesfully' : "You have succesfully joined this team!",
+        'left_team_successfully': "You have succesfully left this team!",
+        'cant_invite_yourself': "You cannot invite yourself.",
+        'invited_successfully': "You have succesfully invited a member!",
+        'stop_already_completed': "This stop has already been completed.",
+        'stop_completed_succesfully': "The stop has been completed succesfully.",
+        'no_such_team': "There is no such team.",
+        'stop_changed_succesfully': "The stop has been changed succesfully."
         
         
     },
@@ -323,9 +334,20 @@ translations = {
         'already_in_team': "Tu jau esi komandoje.",
         'orienteering_team': "Orientacinio komanda",
         'stops': "Stotelės",
-        'current_stop': "Dabartinė stotelė",
+        'current_stop': "Sekanti stotelė",
         'members': "Nariai",
         'team_data': "Komandos informacija",
+        'not_in_team': "Jūs nesate jokioje komandoje.",
+        'not_invited': "Jūs nesate pakviestas į šią komandą.",
+        'team_limit_reached' : "Pasiektas komandos limitas. Komandoje leidžiama daugiausia 6 nariai.",
+        'joined_team_succesfully' : "Jūs sėkmingai prisijungėte prie šios komandos!",
+        'left_team_successfully': "Jūs sėkmingai palikote šią komandą!",
+        'cant_invite_yourself': "Jūs negalite pakviesti savęs į komandą.",
+        'invited_successfully': "Jūs sėkmingai pakvietėte narį į komandą.",
+        'stop_already_completed': "Ši stotelė jau buvo atlikta.",
+        'stop_completed_succesfully': "Stotelė pažymėta kaip atlikta sėkmingai.",
+        'no_such_team': "Nėra tokios komandos.",
+        'stop_changed_succesfully': "Sekanti stotelė pakeista sėkmingai."
                 
     },
 }
