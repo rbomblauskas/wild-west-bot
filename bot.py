@@ -4,6 +4,7 @@ import database
 from translations import translate
 import asyncio
 from catalog import activities, orienteering_stops
+import traceback
 
 intents = discord.Intents.default()
 intents.members = True
@@ -130,12 +131,12 @@ class NameInputModal(discord.ui.Modal):
         await general_channel.send(embed=welcome_embed)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def hello(ctx):
     await ctx.respond('hi', ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def get_user_by_name(ctx, name: str):
     
     await ctx.defer(ephemeral=True)
@@ -164,7 +165,7 @@ async def get_user_by_name(ctx, name: str):
     await ctx.followup.send(embed=user_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choices=activities)):
     
     await ctx.defer(ephemeral=True)
@@ -199,7 +200,7 @@ async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choi
     await ctx.followup.send(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def remove_gold(ctx, name: str, amount: int, reason: str):
     
     await ctx.defer(ephemeral=True)
@@ -234,7 +235,7 @@ async def remove_gold(ctx, name: str, amount: int, reason: str):
     await ctx.followup.send(embed=gold_embed, ephemeral=True)
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def register_user(ctx, name: str, dc_username: str, language: str):
     
     await ctx.defer(ephemeral=True)
@@ -346,7 +347,7 @@ async def close_welcome_channel_and_redirect(member: discord.Member, language: s
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def list_users(ctx):
     
     await ctx.defer(ephemeral=True)
@@ -432,7 +433,7 @@ async def list_users(ctx):
     await message.edit(view=view)
 
 @bot.slash_command(guild_ids=[1288951632200990881])    
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def help(ctx):
     
     await ctx.defer(ephemeral=True)
@@ -471,7 +472,7 @@ async def help(ctx):
     await ctx.followup.send(embed=help_embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def get_user_transactions(ctx, dc_username: str):
     await ctx.defer(ephemeral=True)
 
@@ -559,7 +560,7 @@ async def get_user_transactions(ctx, dc_username: str):
     await message.edit(view=view) 
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def event(ctx):
     await ctx.defer(ephemeral=True)
     
@@ -583,7 +584,7 @@ async def event(ctx):
     await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def add_moderator(ctx, member: discord.Member):
     await ctx.defer(ephemeral=True)
     invoking_user_dc_username = ctx.author.name
@@ -628,7 +629,7 @@ async def add_moderator(ctx, member: discord.Member):
       
     
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def view_shop(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -649,7 +650,7 @@ async def view_shop(ctx):
     await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def buy_item(ctx, member: discord.Member, item: str):
     user_language = await database.get_user_language(ctx.author.name)
     await ctx.defer(ephemeral=True)
@@ -717,7 +718,7 @@ async def buy_item(ctx, member: discord.Member, item: str):
         await ctx.followup.send(embed=embed, ephemeral=True)
         
 @bot.slash_command(guild_ids=[1288951632200990881])     
-@commands.cooldown(1, 2, commands.BucketType.user)   
+#@commands.cooldown(1, 2, commands.BucketType.user)   
 async def balance(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     await ctx.defer(ephemeral=True) 
@@ -741,7 +742,7 @@ async def balance(ctx):
     await ctx.followup.send(embed=embed, ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])    
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def show_activities(ctx):
     
     await ctx.defer(ephemeral=True)
@@ -838,7 +839,7 @@ async def redeem(ctx, key: str):
         await ctx.followup.send(embed=error_embed, ephemeral=True)'''
         
 @bot.slash_command(guild_ids=[1288951632200990881])          
-@commands.cooldown(1, 2, commands.BucketType.user)  
+#@commands.cooldown(1, 2, commands.BucketType.user)  
 async def event_program(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -875,7 +876,7 @@ async def event_program(ctx):
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def create_orienteering_team(ctx, team_name: str):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -917,7 +918,7 @@ async def create_orienteering_team(ctx, team_name: str):
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def join_orienteering_team(ctx, team_name: str):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -980,7 +981,7 @@ async def join_orienteering_team(ctx, team_name: str):
     
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def leave_orienteering_team(ctx):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -1016,7 +1017,7 @@ async def leave_orienteering_team(ctx):
     await ctx.followup.send("Success", ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def invite_to_orienteering_team(ctx, dc_username: str):
     user_language = await database.get_user_language(ctx.author.name)
     
@@ -1060,7 +1061,7 @@ async def invite_to_orienteering_team(ctx, dc_username: str):
     await ctx.followup.send("Success", ephemeral=True)
     
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def get_team_by_name(ctx, team_name: str):
     
     await ctx.defer(ephemeral=True)
@@ -1093,7 +1094,7 @@ async def get_team_by_name(ctx, team_name: str):
     
 
 @bot.slash_command(guild_ids=[1288951632200990881])
-@commands.cooldown(1, 2, commands.BucketType.user)
+#@commands.cooldown(1, 2, commands.BucketType.user)
 async def complete_orienteering_stop(ctx, team_name: str, gold_amount:int, stop: discord.Option(str, choices=orienteering_stops)):
     
     await ctx.defer(ephemeral=True)
@@ -1147,35 +1148,60 @@ async def complete_orienteering_stop(ctx, team_name: str, gold_amount:int, stop:
     success, msg = await database.complete_orienteering_stop(team_name, stop, user_language)
     
     gold_embed = discord.Embed(
-            title=translate(user_language, "gold_added_successfully"),
+            title=translate(user_language, "stop_completed_successfully"),
             color=discord.Colour.green(),
     )
     await ctx.followup.send(embed=gold_embed, ephemeral=True)
     
+@bot.slash_command(guild_ids=[1288951632200990881])
+#@commands.cooldown(1, 2, commands.BucketType.user)
+async def change_orienteering_stop(ctx, team_name: str, stop: discord.Option(str, choices=orienteering_stops)):
     
-
-
-
-'''@bot.event
-async def on_application_command_error(ctx, error):
     await ctx.defer(ephemeral=True)
-    desc = ""
-    if isinstance(error, commands.CommandOnCooldown):
-        desc = f"You're on cooldown! Try again in {round(error.retry_after, 1)} seconds."
-    elif isinstance(error, commands.MissingRequiredArgument):
-        desc = "You missed a required argument!"
-    elif isinstance(error, commands.CommandNotFound):
-        desc = "Command not found!"
-    else:
-        desc = "Bruh"
-        print(str(error))
-    embed = discord.Embed(
-        title='Error',
-        description=desc,
-        color=discord.Color.red()
+    
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    if not await database.is_authorized(ctx.author.name):        
+        error_embed = discord.Embed(
+            title=translate(user_language, "error"),
+            description=translate(user_language, "user_is_not_authorized"),
+            color=discord.Colour.red(),
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    team_data = await database.get_team_by_name(team_name)
+    
+    if not team_data:  
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'no_such_team', name=team_name),
+            color=discord.Colour.red(),
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    if team_data[stop]:
+        error_embed = discord.Embed(
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'stop_already_completed'),
+            color=discord.Colour.red(),
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    
+    
+    success, msg = await database.change_orienteering_stop(team_name, stop, user_language)
+    
+    stop_embed = discord.Embed(
+            title=translate(user_language, "stop_changed_successfully"),
+            color=discord.Colour.green(),
     )
-    await ctx.followup.send(embed=embed, ephemeral=True)'''
-
+    await ctx.followup.send(embed=stop_embed, ephemeral=True)
+    
+    
+    
     
     
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")

@@ -104,7 +104,7 @@ async def is_user_registered(dc_username: str) -> bool:
     return len(user_ref) > 0
 
 async def register_user(name: str, dc_username: str, language: str) -> Tuple[bool, str]:
-    if await is_user_registered:
+    if await is_user_registered(dc_username):
         return (False, '')
 
     doc_ref = db.collection("users").document()
@@ -379,6 +379,15 @@ async def complete_orienteering_stop(team_name: str, stop:str, user_language: st
     
     team_doc_ref = team_ref[0].reference
     await team_doc_ref.update({stop: True})
+    return (True, 'success')
+
+async def change_orienteering_stop(team_name: str, stop:str, user_language: str) -> Tuple[bool, str]:
+    team_ref = await db.collection('teams').where(filter=FieldFilter('name', '==', team_name)).limit(1).get()
+    if not team_ref:
+        return (False, translate(user_language, 'no_such_team'))
+    
+    team_doc_ref = team_ref[0].reference
+    await team_doc_ref.update({'current_stop': stop})
     return (True, 'success')
     
 
