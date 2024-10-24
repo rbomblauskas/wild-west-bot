@@ -1084,7 +1084,7 @@ async def invite_to_orienteering_team(ctx, dc_username: str):
         return
     
     embed = discord.Embed(
-            title=translate(user_language, "invited_successfully"),
+            title=translate(user_language, 'invited_successfully'),
             color=discord.Colour.green(),
     )
     await ctx.followup.send(embed=embed, ephemeral=True)
@@ -1132,8 +1132,8 @@ async def complete_orienteering_stop(ctx, team_name: str, gold_amount:int, stop:
     
     if not await database.is_authorized(ctx.author.name):        
         error_embed = discord.Embed(
-            title=translate(user_language, "error"),
-            description=translate(user_language, "user_is_not_authorized"),
+            title=translate(user_language, 'error'),
+            description=translate(user_language, 'user_is_not_authorized'),
             color=discord.Colour.red(),
         )
         await ctx.followup.send(embed=error_embed, ephemeral=True)
@@ -1177,7 +1177,7 @@ async def complete_orienteering_stop(ctx, team_name: str, gold_amount:int, stop:
     success, msg = await database.complete_orienteering_stop(team_name, stop, user_language)
     
     gold_embed = discord.Embed(
-            title=translate(user_language, "stop_completed_successfully"),
+            title=translate(user_language, 'stop_completed_successfully'),
             color=discord.Colour.green(),
     )
     await ctx.followup.send(embed=gold_embed, ephemeral=True)
@@ -1224,7 +1224,7 @@ async def change_orienteering_stop(ctx, team_name: str, stop: discord.Option(str
     success, msg = await database.change_orienteering_stop(team_name, stop, user_language)
     
     stop_embed = discord.Embed(
-            title=translate(user_language, "stop_changed_successfully"),
+            title=translate(user_language, 'stop_changed_successfully'),
             color=discord.Colour.green(),
     )
     await ctx.followup.send(embed=stop_embed, ephemeral=True)
