@@ -169,14 +169,19 @@ translations = {
         'not_in_team': "You are not in a team.",
         'not_invited': "You are not invited to this team.",
         'team_limit_reached' : "Team limit reached. Maximum of 6 members are allowed.",
-        'joined_team_succesfully' : "You have succesfully joined this team!",
+        'created_team_successfully': "You have successfully created team",
+        'joined_team_successfully' : "You have succesfully joined this team!",
         'left_team_successfully': "You have succesfully left this team!",
         'cant_invite_yourself': "You cannot invite yourself.",
         'invited_successfully': "You have succesfully invited a member!",
         'stop_already_completed': "This stop has already been completed.",
         'stop_completed_succesfully': "The stop has been completed succesfully.",
         'no_such_team': "There is no such team.",
-        'stop_changed_succesfully': "The stop has been changed succesfully."
+        'stop_changed_succesfully': "The stop has been changed succesfully.",
+        'create_team_description': "Creates team for orienteering. Usage: `/create_orienteering_team <team_name>`",
+        'invite_team_description': "Invites user to orienteering team. Usage: `/invite_to_orienteering <dc_username>`",
+        'join_team_description': "Joins orienteering team if you were invited. Usage: `/join_orienteering_team <team_name>`",  
+        
         
         
     },
@@ -340,16 +345,19 @@ translations = {
         'not_in_team': "Jūs nesate jokioje komandoje.",
         'not_invited': "Jūs nesate pakviestas į šią komandą.",
         'team_limit_reached' : "Pasiektas komandos limitas. Komandoje leidžiama daugiausia 6 nariai.",
-        'joined_team_succesfully' : "Jūs sėkmingai prisijungėte prie šios komandos!",
+        'created_team_successfully': "Sėkmingai sukūrėte komandą",
+        'joined_team_successfully' : "Jūs sėkmingai prisijungėte prie šios komandos!",
         'left_team_successfully': "Jūs sėkmingai palikote šią komandą!",
         'cant_invite_yourself': "Jūs negalite pakviesti savęs į komandą.",
         'invited_successfully': "Jūs sėkmingai pakvietėte narį į komandą.",
         'stop_already_completed': "Ši stotelė jau buvo atlikta.",
         'stop_completed_succesfully': "Stotelė pažymėta kaip atlikta sėkmingai.",
         'no_such_team': "Nėra tokios komandos.",
-        'stop_changed_succesfully': "Sekanti stotelė pakeista sėkmingai."
-                
-    },
+        'stop_changed_succesfully': "Sekanti stotelė pakeista sėkmingai.",
+        'create_team_description': "Sukuria orientacinių komandą. Naudojimas: `/create_orienteering_team <team_name>`",
+        'invite_team_description': "Pakviečia vartoją į orientacinių komandą. Naudojimas: `/invite_to_orienteering <dc_username>`",     
+        'join_team_description': "Prisijungia į orientacinių komandą, kurioje buvote pakviestas. Naudojimas: `/join_orienteering_team <team_name>`",     
+    },  
 }
 
 def translate(language: str, key: str, **kwargs) -> str:

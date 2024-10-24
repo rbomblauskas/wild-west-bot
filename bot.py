@@ -457,7 +457,10 @@ async def help(ctx):
     help_embed.add_field(name="/view_shop", value=translate(user_language, 'view_shop_description'), inline=False)
     help_embed.add_field(name="/balance", value=translate(user_language, 'balance_command_description'), inline=False)
     help_embed.add_field(name="/show_activities", value=translate(user_language, 'show_activities_description'), inline=False)
-    #help_embed.add_field(name="/redeem", value=translate(user_language, 'redeem_description'), inline=False)
+    help_embed.add_field(name="/create_orienteering_team", value=translate(user_language, 'create_team_description'), inline=False)
+    help_embed.add_field(name="/invite_to_orienteering_team", value=translate(user_language, 'invite_team_description'), inline=False)
+    help_embed.add_field(name="/join_orienteering_team", value=translate(user_language, 'join_team_description'), inline=False)
+
 
 
     if await database.is_authorized(invoking_user_dc_username):
