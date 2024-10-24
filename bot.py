@@ -340,10 +340,11 @@ async def close_welcome_channel_and_redirect(member: discord.Member, language: s
 
     welcome_embed = discord.Embed(
         title=translate(language, 'welcome_title'),
-        description=translate(language, 'welcome', name=member.mention),
-        color=discord.Color.green()
+        description=translate(language, 'welcome1', name=member.mention) +
+                    translate(language, 'welcome2') +
+                    translate(language, 'welcome3'),
+        color=discord.Color.from_rgb(212, 184, 146) 
     )
-    
     await general_channel.send(embed=welcome_embed)
     
     
@@ -1216,9 +1217,6 @@ async def change_orienteering_stop(ctx, team_name: str, stop: discord.Option(str
             color=discord.Colour.green(),
     )
     await ctx.followup.send(embed=stop_embed, ephemeral=True)
-    
-    
-    
     
     
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
