@@ -460,7 +460,8 @@ async def help(ctx):
     help_embed.add_field(name="/create_orienteering_team", value=translate(user_language, 'create_team_description'), inline=False)
     help_embed.add_field(name="/invite_to_orienteering_team", value=translate(user_language, 'invite_team_description'), inline=False)
     help_embed.add_field(name="/join_orienteering_team", value=translate(user_language, 'join_team_description'), inline=False)
-
+    help_embed.add_field(name="/leave_orienteering_team", value=translate(user_language, 'leave_team_description'), inline=False)
+    help_embed.add_field(name="/get_team_by_name", value=translate(user_language, 'get_team_by_name_description'), inline=False)
 
 
     if await database.is_authorized(invoking_user_dc_username):
@@ -471,6 +472,8 @@ async def help(ctx):
         help_embed.add_field(name="/register_user", value=translate(user_language, 'register_user_description'), inline=False)
         help_embed.add_field(name="/get_user_transactions", value=translate(user_language, 'get_user_transactions_description'), inline=False)
         help_embed.add_field(name="/buy_item", value=translate(user_language, 'buy_item_description'), inline=False)
+        help_embed.add_field(name="/complete_orienteering_stop", value=translate(user_language, 'complete_orienteering_stop_description'), inline=False)
+        help_embed.add_field(name="/change_orienteering_stop", value=translate(user_language, 'change_orienteering_stop_description'), inline=False)
 
     help_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
     

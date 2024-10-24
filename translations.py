@@ -181,7 +181,10 @@ translations = {
         'create_team_description': "Creates team for orienteering. Usage: `/create_orienteering_team <team_name>`",
         'invite_team_description': "Invites user to orienteering team. Usage: `/invite_to_orienteering <dc_username>`",
         'join_team_description': "Joins orienteering team if you were invited. Usage: `/join_orienteering_team <team_name>`",  
-        
+        'leave_team_description': "Leaves orienteering team",
+        'get_team_by_name_description': "Shows information about orienteering team",
+        'complete_orienteering_stop_description': "Marks event that team completed and gives gold to team's balance Usage: `/complete_orienteering_stop <team_name> <gold_amount> <stop>`",
+        'change_orienteering_stop_description': "Changes orienteering event for the team. Usage: `/change_orienteering_stop <team_name>`",
         
         
     },
@@ -356,7 +359,11 @@ translations = {
         'stop_changed_succesfully': "Sekanti stotelė pakeista sėkmingai.",
         'create_team_description': "Sukuria orientacinių komandą. Naudojimas: `/create_orienteering_team <team_name>`",
         'invite_team_description': "Pakviečia vartoją į orientacinių komandą. Naudojimas: `/invite_to_orienteering <dc_username>`",     
-        'join_team_description': "Prisijungia į orientacinių komandą, kurioje buvote pakviestas. Naudojimas: `/join_orienteering_team <team_name>`",     
+        'join_team_description': "Prisijungia į orientacinių komandą, kurioje buvote pakviestas. Naudojimas: `/join_orienteering_team <team_name>`", 
+        'leave_team_description': "Palieka orientacinių komandą.",
+        'get_team_by_name_description': "Parodo informaciją apie norimą komandą",
+        'complete_orienteering_stop_description': "Pažymi, kurią veiklą įvykdė komandą ir prideda aukso prie komandos sąskaitos. Naudojimas: `/complete_orienteering_stop <team_name> <gold_amount> <stop>`",
+        'change_orienteering_stop_description': "Pakeičia komandai veiklą, į kurią jie turėtų eiti. Naudojimas: `/change_orienteering_stop <team_name>`",
     },  
 }
 
