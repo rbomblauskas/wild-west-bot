@@ -1044,7 +1044,8 @@ async def leave_orienteering_team(ctx):
     
 @bot.slash_command(guild_ids=[1288951632200990881])      
 #@commands.cooldown(1, 2, commands.BucketType.user)
-async def invite_to_orienteering_team(ctx, dc_username: str):
+async def invite_to_orienteering_team(ctx, dc_user: discord.Option(discord.Member)):
+    dc_username = dc_user.name
     user_language = await database.get_user_language(ctx.author.name)
     
     await ctx.defer(ephemeral=True)
