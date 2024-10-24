@@ -131,6 +131,10 @@ async def get_all_users():
     users_ref = await db.collection('users').get()
     return [user_doc.to_dict() for user_doc in users_ref]
 
+async def get_all_teams():
+    users_ref = await db.collection('teams').get()
+    return [user_doc.to_dict() for user_doc in users_ref]
+
 async def get_user_language(dc_username: str) -> str:
     user_ref = await db.collection('users').where(filter=FieldFilter('dc_username', '==', dc_username)).limit(1).get()
     

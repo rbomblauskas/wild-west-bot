@@ -1232,4 +1232,91 @@ async def change_orienteering_stop(ctx, team_name: str, stop: discord.Option(str
     await ctx.followup.send(embed=stop_embed, ephemeral=True)
     
     
+@bot.slash_command(guild_ids=[1288951632200990881])
+#@commands.cooldown(1, 2, commands.BucketType.user)
+async def list_teams(ctx):
+    
+    await ctx.defer(ephemeral=True)
+    
+    user_language = await database.get_user_language(ctx.author.name)
+    
+    if not await database.is_authorized(ctx.author.name):        
+        error_embed = discord.Embed(
+            title=translate(user_language, "error"),
+            description=translate(user_language, "user_is_not_authorized"),
+            color=discord.Colour.red(),
+        )
+        await ctx.followup.send(embed=error_embed, ephemeral=True)
+        return
+    
+    users = await database.get_all_teams()
+    users = sorted(users, key=lambda x: x['gold'], reverse=True)
+    
+    pages = 5 
+    total_users = len(users)
+
+    if total_users == 0:
+        await ctx.followup.send(translate(user_language, 'no_registered_users'), ephemeral=True)
+        return
+
+    num_pages = (total_users + pages - 1) // pages
+    cur_page = 0
+
+    def create_embed(page):
+        start = page * pages
+        end = start + pages
+        user_data = users[start:end]
+
+        embed = discord.Embed(title=translate(user_language, 'Team list', page=page + 1, num_pages=num_pages),
+        color=discord.Color.blue())
+        for index, user in enumerate(user_data, start=start + 1):
+            embed.add_field(
+                name=f"{index}. {user['name']}", 
+                value=f"**{translate(user_language, 'name')}:** {user['name']}\n"
+                      f"**{translate(user_language, 'gold')}:** {user['gold']}", 
+                inline=False
+            )
+        
+        return embed
+
+    message = await ctx.followup.send(embed=create_embed(cur_page), ephemeral=True)
+
+    previous_button = discord.ui.Button(label=translate(user_language, 'previous_button'), style=discord.ButtonStyle.primary, disabled=True)
+    next_button = discord.ui.Button(label=translate(user_language, 'next_button'), style=discord.ButtonStyle.primary)
+
+    view = discord.ui.View()
+    view.add_item(previous_button)
+    view.add_item(next_button)
+
+    def update_buttons():
+        previous_button.disabled = cur_page == 0
+        next_button.disabled = cur_page >= num_pages - 1
+
+    update_buttons() 
+
+    async def button_callback(interaction: discord.Interaction):
+        nonlocal cur_page 
+        if interaction.user != ctx.author:
+            await interaction.response.send_message(translate(user_language, 'not_your_button'), ephemeral=True)
+            return
+
+        if interaction.data['custom_id'] == "next_button":
+            if cur_page < num_pages - 1:
+                cur_page += 1
+        elif interaction.data['custom_id'] == "previous_button":
+            if cur_page > 0:
+                cur_page -= 1
+
+        await message.edit(embed=create_embed(cur_page))
+        update_buttons() 
+        await interaction.response.edit_message(view=view) 
+
+    previous_button.callback = button_callback
+    previous_button.custom_id = "previous_button"
+    next_button.callback = button_callback
+    next_button.custom_id = "next_button"
+
+    await message.edit(view=view)
+    
+    
 bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
