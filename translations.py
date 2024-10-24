@@ -185,7 +185,10 @@ translations = {
         'get_team_by_name_description': "Shows information about orienteering team",
         'complete_orienteering_stop_description': "Marks event that team completed and gives gold to team's balance Usage: `/complete_orienteering_stop <team_name> <gold_amount> <stop>`",
         'change_orienteering_stop_description': "Changes orienteering event for the team. Usage: `/change_orienteering_stop <team_name>`",
-        
+        'photo_wall': "📷 Photo wall:",
+        'photo_wall_description': "Make an original photo and win gold. (near library)",
+        'film': "🎥 Film:",
+        'film_description': "Watch film. (103 audience)",
         
     },
     'lt': {
@@ -364,6 +367,10 @@ translations = {
         'get_team_by_name_description': "Parodo informaciją apie norimą komandą",
         'complete_orienteering_stop_description': "Pažymi, kurią veiklą įvykdė komandą ir prideda aukso prie komandos sąskaitos. Naudojimas: `/complete_orienteering_stop <team_name> <gold_amount> <stop>`",
         'change_orienteering_stop_description': "Pakeičia komandai veiklą, į kurią jie turėtų eiti. Naudojimas: `/change_orienteering_stop <team_name>`",
+        'photo_wall': "📷 Foto sienelė:",
+        'photo_wall_description': "Kuo originaliau nusifotografuok ir laimėk aukso. (prieš skaityklą)",
+        'film': "🎥 Filmas:",
+        'film_description': "Filmo žiūrėjimas. (103 auditorija)"
     },  
 }
 

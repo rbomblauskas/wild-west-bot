@@ -754,48 +754,52 @@ async def balance(ctx):
 async def show_activities(ctx):
     
     await ctx.defer(ephemeral=True)
-    
     user_language = await database.get_user_language(ctx.author.name)
+    
+    main_activities_embed = discord.Embed(
+    title=translate(user_language, 'main_activities'),
+    color=discord.Color.gold()
+)
+    main_activities_embed.add_field(name=translate(user_language, 'photo_wall'), value=translate(user_language, 'photo_wall_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'monster'), value=translate(user_language, 'monster_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'horseshoe_throw'), value=translate(user_language, 'horseshoe_throw_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'cactus'), value=translate(user_language, 'cactus_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'catching_micius'), value=translate(user_language, 'catching_micius_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'apple_bobbing'), value=translate(user_language, 'apple_bobbing_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'wild_west_duel'), value=translate(user_language, 'wild_west_duel_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'cup_pyramid_shooting'), value=translate(user_language, 'cup_pyramid_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'shoot_a_line_of_cups'), value=translate(user_language, 'line_cups_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'target_shooting'), value=translate(user_language, 'target_shooting_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'shoot_apple_from_head'), value=translate(user_language, 'apple_from_head_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'gold_searching'), value=translate(user_language, 'gold_searching_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'horse_tail'), value=translate(user_language, 'horse_tail_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'dancing'), value=translate(user_language, 'dancing_description'), inline=False)
+    main_activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
 
-    activities_embed = discord.Embed(
-        title=translate(user_language, 'available_activities'),
-        description=translate(user_language, 'here_are_activities'),
-        color=discord.Colour.from_rgb(139, 69, 19),
+
+    await ctx.followup.send(embed=main_activities_embed, ephemeral=True)
+
+    additional_activities_embed = discord.Embed(
+        title=translate(user_language, 'additional_activities'),
+        color=discord.Color.gold()
     )
 
-    activities_embed.add_field(name=translate(user_language, 'main_activities'), value="", inline=False)  
-    
-    activities_embed.add_field(name=translate(user_language, 'monster'), value=translate(user_language, 'monster_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'horseshoe_throw'), value=translate(user_language, 'horseshoe_throw_description'))
-    activities_embed.add_field(name=translate(user_language, 'cactus'), value=translate(user_language, 'cactus_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'catching_micius'), value=translate(user_language, 'catching_micius_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'apple_bobbing'), value=translate(user_language, 'apple_bobbing_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'wild_west_duel'), value=translate(user_language, 'wild_west_duel_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'cup_pyramid_shooting'), value=translate(user_language, 'cup_pyramid_description'))
-    activities_embed.add_field(name=translate(user_language, 'shoot_a_line_of_cups'), value=translate(user_language, 'line_cups_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'target_shooting'), value=translate(user_language, 'target_shooting_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'shoot_apple_from_head'), value=translate(user_language, 'apple_from_head_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'gold_searching'), value=translate(user_language, 'gold_searching_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'horse_tail'), value=translate(user_language, 'horse_tail_description'))
-    activities_embed.add_field(name=translate(user_language, 'dancing'), value=translate(user_language, 'dancing_description'), inline=False)
-    
-    activities_embed.add_field(name=translate(user_language, 'additional_activities'), value="",inline=False)
-    
-    activities_embed.add_field(name=translate(user_language, 'bull'), value=translate(user_language, 'bull_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'trivia'), value=translate(user_language, 'trivia_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'escape_room'), value=translate(user_language, 'escape_room_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'karaoke'), value=translate(user_language, 'karaoke_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'sack_jumping_race'), value=translate(user_language, 'sack_jumping_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'treasure_hunt'), value=translate(user_language, 'treasure_hunt_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'poker'), value=translate(user_language, 'poker_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'blackjack'), value=translate(user_language, 'blackjack_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'just_dance'), value=translate(user_language, 'just_dance_description'), inline=False)
-    activities_embed.add_field(name=translate(user_language, 'lecturer_interview'), value=translate(user_language, 'lecturer_interview_description'), inline=False)
-    
-    activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
-    
-    await ctx.followup.send(embed=activities_embed, ephemeral=True)
-    
+    additional_activities_embed.add_field(name=translate(user_language, 'bull'), value=translate(user_language, 'bull_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'trivia'), value=translate(user_language, 'trivia_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'escape_room'), value=translate(user_language, 'escape_room_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'karaoke'), value=translate(user_language, 'karaoke_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'sack_jumping_race'), value=translate(user_language, 'sack_jumping_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'treasure_hunt'), value=translate(user_language, 'treasure_hunt_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'poker'), value=translate(user_language, 'poker_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'blackjack'), value=translate(user_language, 'blackjack_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'just_dance'), value=translate(user_language, 'just_dance_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'lecturer_interview'), value=translate(user_language, 'lecturer_interview_description'), inline=False)
+    additional_activities_embed.add_field(name=translate(user_language, 'film'), value=translate(user_language, 'film_description'), inline=False)
+    additional_activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
+
+
+    await ctx.followup.send(embed=additional_activities_embed, ephemeral=True)
+
 '''@bot.slash_command(guild_ids=[1288951632200990881])      
 @commands.cooldown(1, 2, commands.BucketType.user)
 async def redeem(ctx, key: str):
