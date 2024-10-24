@@ -183,7 +183,6 @@ translations = {
         'get_team_by_name_description': "Shows information about orienteering team",
         'complete_orienteering_stop_description': "Marks event that team completed and gives gold to team's balance Usage: `/complete_orienteering_stop <team_name> <gold_amount> <stop>`",
         'change_orienteering_stop_description': "Changes orienteering event for the team. Usage: `/change_orienteering_stop <team_name>`",
-        'photo_wall': "📷 Photo wall:",
         'photo_wall_description': "Make an original photo and win gold. (near library)",
         'film': "🎥 Film:",
         'film_description': "Watch film. (103 audience)",

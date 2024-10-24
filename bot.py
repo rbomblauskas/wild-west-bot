@@ -774,6 +774,7 @@ async def show_activities(ctx):
     main_activities_embed.add_field(name=translate(user_language, 'gold_searching'), value=translate(user_language, 'gold_searching_description'), inline=False)
     main_activities_embed.add_field(name=translate(user_language, 'horse_tail'), value=translate(user_language, 'horse_tail_description'), inline=False)
     main_activities_embed.add_field(name=translate(user_language, 'dancing'), value=translate(user_language, 'dancing_description'), inline=False)
+    main_activities_embed.add_field(name=translate(user_language, 'escape_room'), value=translate(user_language, 'escape_room_description'), inline=False)
     main_activities_embed.set_thumbnail(url="https://i.imgur.com/ezKiTCS.jpeg")
 
 
@@ -786,7 +787,7 @@ async def show_activities(ctx):
 
     additional_activities_embed.add_field(name=translate(user_language, 'bull'), value=translate(user_language, 'bull_description'), inline=False)
     additional_activities_embed.add_field(name=translate(user_language, 'trivia'), value=translate(user_language, 'trivia_description'), inline=False)
-    additional_activities_embed.add_field(name=translate(user_language, 'escape_room'), value=translate(user_language, 'escape_room_description'), inline=False)
+
     additional_activities_embed.add_field(name=translate(user_language, 'karaoke'), value=translate(user_language, 'karaoke_description'), inline=False)
     additional_activities_embed.add_field(name=translate(user_language, 'sack_jumping_race'), value=translate(user_language, 'sack_jumping_description'), inline=False)
     additional_activities_embed.add_field(name=translate(user_language, 'treasure_hunt'), value=translate(user_language, 'treasure_hunt_description'), inline=False)
