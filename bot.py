@@ -138,10 +138,10 @@ async def hello(ctx):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 #@commands.cooldown(1, 2, commands.BucketType.user)
-async def get_user_by_name(ctx, name: str):
+async def get_user_by_name(ctx, user: discord.Option(discord.Member)):
     
     await ctx.defer(ephemeral=True)
-    
+    name = user.name
     user_language = await database.get_user_language(ctx.author.name)
     user_data = await database.get_user_by_name(name)
     
@@ -167,10 +167,10 @@ async def get_user_by_name(ctx, name: str):
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 #@commands.cooldown(1, 2, commands.BucketType.user)
-async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choices=activities)):
+async def add_gold(ctx, user: discord.Option(discord.Member), amount: int, reason: discord.Option(str, choices=activities)):
     
     await ctx.defer(ephemeral=True)
-    
+    name = user.name  
     user_language = await database.get_user_language(ctx.author.name)
     
     if not await database.is_authorized(ctx.author.name):        
@@ -202,10 +202,10 @@ async def add_gold(ctx, name: str, amount: int, reason: discord.Option(str, choi
 
 @bot.slash_command(guild_ids=[1288951632200990881])
 #@commands.cooldown(1, 2, commands.BucketType.user)
-async def remove_gold(ctx, name: str, amount: int, reason: str):
+async def remove_gold(ctx, user: discord.Option(discord.Member), amount: int, reason: str):
     
     await ctx.defer(ephemeral=True)
-    
+    name = user.name
     user_language = await database.get_user_language(ctx.author.name)
     
     if not await database.is_authorized(ctx.author.name):        
@@ -481,9 +481,9 @@ async def help(ctx):
     
 @bot.slash_command(guild_ids=[1288951632200990881])
 #@commands.cooldown(1, 2, commands.BucketType.user)
-async def get_user_transactions(ctx, dc_username: str):
+async def get_user_transactions(ctx, user: discord.Option(discord.Member)):
     await ctx.defer(ephemeral=True)
-
+    dc_username = user.name
     user_language = await database.get_user_language(ctx.author.name)
 
     if not await database.is_authorized(ctx.author.name):
