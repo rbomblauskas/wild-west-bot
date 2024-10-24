@@ -18,7 +18,7 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     
-    await asyncio.sleep(2)
+    #await asyncio.sleep(2)
     
     channel = bot.get_channel(1295704772623601674)
     welcome_message_en = translate('en', 'welcome_message', dc_username=member.mention)
