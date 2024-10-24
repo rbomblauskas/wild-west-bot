@@ -1119,7 +1119,7 @@ async def get_team_by_name(ctx, team_name: str):
     team_embed.add_field(name=translate(user_language, 'current_stop'), value=translate(user_language, team_data['current_stop']), inline=False)
     stops = ''
     for stop in orienteering_stops:
-        stops += f'{translate(user_language, stop)} {'✅' if team_data[stop] else '❌'}\n'
+        stops += f'{translate(user_language, stop)} {"✅" if team_data[stop] else "❌"}\n'
     team_embed.add_field(name=translate(user_language, 'stops'), value=stops, inline=False)
     await ctx.followup.send(embed=team_embed, ephemeral=True)
     
