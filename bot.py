@@ -1319,4 +1319,4 @@ async def list_teams(ctx):
     await message.edit(view=view)
     
     
-bot.run("MTI4ODk1MTgyMTkxNzg4NDQ0Ng.GJp8HR.AhbEBj7XgP5YDu_jV7ngeOM4xJilbEPMFJfQRM")
+bot.run("token") #Old token was reset
